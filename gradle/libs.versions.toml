@@ -14,7 +14,7 @@ kermit = "1.2.2" # https://github.com/touchlab/Kermit
 buildKonfig = "0.15.2" # https://github.com/yshrsmz/BuildKonfig
 
 # Documentation
-dokka = "1.9.20" # https://github.com/Kotlin/dokka
+dokka = "2.0.0" # https://github.com/Kotlin/dokka
 
 # Localization
 lyricist = "1.7.0" # https://github.com/adrielcafe/lyricist
