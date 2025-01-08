@@ -31,7 +31,7 @@ enum BridgeLogLevel {
 
 class BridgeMockzillaHttpRequest {
   final String uri;
-  final Map<String?, String?> headers;
+  final Map<String, String> headers;
   final String body;
   final BridgeHttpMethod method;
 
@@ -45,7 +45,7 @@ class BridgeMockzillaHttpRequest {
 
 class BridgeMockzillaHttpResponse {
   final int statusCode;
-  final Map<String?, String?> headers;
+  final Map<String, String> headers;
   final String body;
 
   const BridgeMockzillaHttpResponse([
@@ -55,53 +55,59 @@ class BridgeMockzillaHttpResponse {
   ]);
 }
 
+class BridgeDashboardOverridePreset {
+  final String name;
+  final String? description;
+  final BridgeMockzillaHttpResponse response;
+
+  const BridgeDashboardOverridePreset({
+    required this.name,
+    this.description,
+    required this.response,
+  });
+}
+
+class BridgeDashboardOptionsConfig {
+  final List<BridgeDashboardOverridePreset> successPresets;
+  final List<BridgeDashboardOverridePreset> errorPresets;
+
+  const BridgeDashboardOptionsConfig({
+    required this.successPresets,
+    required this.errorPresets,
+  });
+}
+
 class BridgeEndpointConfig {
   final String name;
   final String key;
-  final int failureProbability;
-  final int delayMean;
-  final int delayVariance;
-  final BridgeMockzillaHttpResponse? webApiDefaultResponse;
-  final BridgeMockzillaHttpResponse? webApiErrorResponse;
+  final bool shouldFail;
+  final int delayMs;
+  final int versionCode;
+  final BridgeDashboardOptionsConfig config;
 
-  const BridgeEndpointConfig(
-    this.name,
-    this.key,
-    this.failureProbability,
-    this.delayMean,
-    this.delayVariance, [
-    this.webApiDefaultResponse,
-    this.webApiErrorResponse,
-  ]);
-}
-
-class BridgeReleaseModeConfig {
-  final int rateLimit;
-  final int rateLimitRefillPeriodMillis;
-  final int tokenLifeSpanMillis;
-
-  const BridgeReleaseModeConfig([
-    this.rateLimit = 60,
-    this.rateLimitRefillPeriodMillis = 60000,
-    this.tokenLifeSpanMillis = 500,
-  ]);
+  const BridgeEndpointConfig({
+    required this.name,
+    required this.key,
+    required this.shouldFail,
+    required this.delayMs,
+    required this.versionCode,
+    required this.config,
+  });
 }
 
 class BridgeMockzillaConfig {
   final int port;
-  final List<BridgeEndpointConfig?> endpoints;
-  final bool isRelease;
+  final List<BridgeEndpointConfig> endpoints;
   final bool localHostOnly;
   final BridgeLogLevel logLevel;
-  final BridgeReleaseModeConfig releaseModeConfig;
+  final bool isNetworkDiscoveryEnabled;
 
   const BridgeMockzillaConfig(
     this.port,
     this.endpoints,
-    this.isRelease,
     this.localHostOnly,
     this.logLevel,
-    this.releaseModeConfig,
+    this.isNetworkDiscoveryEnabled,
   );
 }
 
@@ -116,16 +122,6 @@ class BridgeMockzillaRuntimeParams {
     this.mockBaseUrl,
     this.apiBaseUrl,
     this.port,
-  );
-}
-
-class BridgeAuthHeader {
-  final String key;
-  final String value;
-
-  const BridgeAuthHeader(
-    this.key,
-    this.value,
   );
 }
 
@@ -145,9 +141,6 @@ abstract class MockzillaFlutterApi {
 
   BridgeMockzillaHttpResponse errorHandler(
       BridgeMockzillaHttpRequest request, String key);
-
-  @async
-  BridgeAuthHeader generateAuthHeader();
 
   void log(
     BridgeLogLevel logLevel,

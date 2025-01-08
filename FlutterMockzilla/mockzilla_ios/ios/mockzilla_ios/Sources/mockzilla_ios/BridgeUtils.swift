@@ -80,7 +80,7 @@ extension BridgeMockzillaHttpResponse {
     func toNative() -> MockzillaHttpResponse {
         return MockzillaHttpResponse(
             statusCode: Ktor_httpHttpStatusCode.init(value: Int32(self.statusCode), description: ""),
-            headers: DictionaryUtils.removeNils(self.headers),
+            headers: self.headers,
             body: self.body
         )
     }
@@ -90,6 +90,48 @@ extension BridgeMockzillaHttpResponse {
             statusCode: Int64(response.statusCode.value),
             headers: response.headers,
             body: response.body
+        )
+    }
+}
+
+extension BridgeDashboardOverridePreset {
+    func toNative() -> Mockzilla_commonDashboardOverridePreset {
+        return Mockzilla_commonDashboardOverridePreset(
+            name: name,
+            description: description,
+            response: response.toNative()
+        )
+    }
+    
+    static func fromNative(_ data: Mockzilla_commonDashboardOverridePreset) -> BridgeDashboardOverridePreset {
+        return BridgeDashboardOverridePreset(
+            name: data.name,
+            description: data.description_,
+            response: BridgeMockzillaHttpResponse.fromNative(data.response)
+        )
+    }
+}
+
+extension BridgeDashboardOptionsConfig {
+    func toNative() -> Mockzilla_commonDashboardOptionsConfig {
+        return Mockzilla_commonDashboardOptionsConfig(
+            errorPresets: errorPresets.map {
+                preset in preset.toNative()
+            } as! Array<Mockzilla_commonDashboardOverridePreset>,
+            successPresets: successPresets.map {
+                preset in preset.toNative()
+            } as! Array<Mockzilla_commonDashboardOverridePreset>
+        )
+    }
+    
+    static func fromNative(_ data: Mockzilla_commonDashboardOptionsConfig) -> BridgeDashboardOptionsConfig {
+        return BridgeDashboardOptionsConfig(
+            successPresets: data.successPresets.map {
+                it in BridgeDashboardOverridePreset.fromNative(it)
+            },
+            errorPresets: data.errorPresets.map {
+                it in BridgeDashboardOverridePreset.fromNative(it)
+            }
         )
     }
 }
@@ -104,12 +146,11 @@ extension BridgeEndpointConfig {
         return EndpointConfiguration(
             name: name,
             key: key,
-            failureProbability: KotlinInt(int: Int32(truncatingIfNeeded: failureProbability)),
-            delayMean: KotlinInt(int: Int32(truncatingIfNeeded: delayMean)),
-            delayVariance: KotlinInt(int: Int32(truncatingIfNeeded: delayVariance)),
+            shouldFail: shouldFail,
+            delay: KotlinInt(int: Int32(delayMs)),
+            dashboardOptionsConfig: config.toNative(),
+            versionCode: Int32(truncatingIfNeeded: versionCode),
             endpointMatcher: { request in KotlinBoolean(value: endpointMatcher(key, request))},
-            webApiDefaultResponse: webApiDefaultResponse?.toNative(),
-            webApiErrorResponse: webApiErrorResponse?.toNative(),
             defaultHandler: { request in defaultHandler(key, request) },
             errorHandler: { request in errorHandler(key, request) }
         )
@@ -118,34 +159,11 @@ extension BridgeEndpointConfig {
     static func fromNative(_ endpoint: EndpointConfiguration) -> BridgeEndpointConfig {
         return BridgeEndpointConfig(
             name: endpoint.name,
-            key: endpoint.key,
-            failureProbability: endpoint.failureProbability?.int64Value ?? 0,
-            delayMean: endpoint.delayMean?.int64Value ?? 100,
-            delayVariance: endpoint.delayVariance?.int64Value ?? 20,
-            webApiDefaultResponse: endpoint.webApiDefaultResponse.map {
-                response in BridgeMockzillaHttpResponse.fromNative(response)
-            },
-            webApiErrorResponse: endpoint.webApiErrorResponse.map {
-                response in BridgeMockzillaHttpResponse.fromNative(response)
-            }
-        )
-    }
-}
-
-extension BridgeReleaseModeConfig {
-    func toNative() -> MockzillaConfig.ReleaseModeConfig {
-        return MockzillaConfig.ReleaseModeConfig(
-            rateLimit: Int32(rateLimit),
-            rateLimitRefillPeriod: rateLimitRefillPeriodMillis,
-            tokenLifeSpan: tokenLifeSpanMillis
-        )
-    }
-    
-    static func fromNative(_ config: MockzillaConfig.ReleaseModeConfig) -> BridgeReleaseModeConfig {
-        return BridgeReleaseModeConfig(
-            rateLimit: Int64(config.rateLimit),
-            rateLimitRefillPeriodMillis: config.rateLimitRefillPeriod,
-            tokenLifeSpanMillis: config.tokenLifeSpan
+            key: endpoint.key as! String,
+            shouldFail: endpoint.shouldFail,
+            delayMs: endpoint.delay?.int64Value ?? 100,
+            versionCode: Int64(endpoint.versionCode),
+            config: BridgeDashboardOptionsConfig.fromNative(endpoint.dashboardOptionsConfig)
         )
     }
 }
@@ -159,13 +177,16 @@ extension BridgeMockzillaConfig {
         return MockzillaConfig(
             port: Int32(port),
             endpoints: endpoints.map {
-                endpoint in endpoint?.toNative(endpointMatcher: endpointMatcher, defaultHandler: defaultHandler, errorHandler: errorHandler)
-            }.filter {
-                endpoint in endpoint != nil
+                endpoint in endpoint.toNative(endpointMatcher: endpointMatcher, defaultHandler: defaultHandler, errorHandler: errorHandler)
             } as! Array<EndpointConfiguration>,
-            isRelease: isRelease,
+            isRelease: false,
             localhostOnly: false, logLevel: logLevel.toNative(),
-            releaseModeConfig: releaseModeConfig.toNative(),
+            releaseModeConfig: ReleaseModeConfig(
+                rateLimit: 60,
+                rateLimitRefillPeriod: 60_000,
+                tokenLifeSpan: 500
+            ),
+            isNetworkDiscoveryEnabled: isNetworkDiscoveryEnabled,
             additionalLogWriters: []
         )
     }
@@ -176,10 +197,9 @@ extension BridgeMockzillaConfig {
             endpoints: config.endpoints.map {
                 endpoint in BridgeEndpointConfig.fromNative(endpoint)
             },
-            isRelease: config.isRelease,
             localHostOnly: config.isRelease,
             logLevel: try BridgeLogLevel.fromNative(config.logLevel),
-            releaseModeConfig: BridgeReleaseModeConfig.fromNative(config.releaseModeConfig)
+            isNetworkDiscoveryEnabled: config.isNetworkDiscoveryEnabled
         )
     }
 }

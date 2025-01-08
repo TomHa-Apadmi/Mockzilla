@@ -1,21 +1,37 @@
+import 'package:meta/meta.dart';
+import 'package:flutter/services.dart';
 import 'package:mockzilla_ios/src/api_utils.dart';
 import 'package:mockzilla_ios/src/messages.g.dart';
-import 'package:mockzilla_ios/src/utils/list_utils.dart';
+import 'package:mockzilla_ios/src/model/mockzilla_error.dart';
 import 'package:mockzilla_platform_interface/mockzilla_platform_interface.dart';
 
 class MockzillaIos extends MockzillaPlatform {
   final mockzillaHostBridge = MockzillaHostApi();
 
   @override
-  Future<void> startMockzilla(MockzillaConfig config) {
+  Future<MockzillaRuntimeParams> startMockzilla(MockzillaConfig config) async {
     final callbackProvider = CallbackProvider(
       config.endpoints,
-      () => Future.value(
-        BridgeAuthHeader(key: "Authorization", value: "Bearer"),
-      ),
     );
-    MockzillaFlutterApi.setup(callbackProvider);
-    return mockzillaHostBridge.startServer(config.toBridge());
+    MockzillaFlutterApi.setUp(callbackProvider);
+    try {
+      final bridgeParams =
+          await mockzillaHostBridge.startServer(config.toBridge());
+
+      /// As an alternative, we could use the endpoints in `config`, however
+      /// using `callbackProvider` means that the returned runtime params and
+      /// server will be consistent in using the cached endpoints. This will make
+      /// debugging much easier.
+      return bridgeParams.toDart(
+          endpointMatcher: callbackProvider.flutterEndpointMatcher,
+          defaultHandler: callbackProvider.flutterDefaultHandler,
+          errorHandler: callbackProvider.flutterErrorHandler);
+    } on PlatformException catch (exception) {
+      if (exception.code == "PortConflictException") {
+        throw MockzillaPortConflictException(config.port);
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -28,29 +44,34 @@ class MockzillaIos extends MockzillaPlatform {
 
 class CallbackProvider extends MockzillaFlutterApi {
   final List<EndpointConfig> endpoints;
-  final Future<BridgeAuthHeader> Function() _generateAuthHeader;
 
   CallbackProvider(
     this.endpoints,
-    this._generateAuthHeader,
   );
 
-  /// Used to resolve the endpoint matching the specified key.
-  EndpointConfig? _determineEndpoint(String key) => endpoints.firstWhereOrNull(
+  /// Utility function to find a cached endpoint config with a given [key].
+  /// This is used to determine which endpoint handler to use for matching,
+  /// request handling etc. as Dart functions can't be nested in objects going
+  /// across the pigeon bridge.
+  ///
+  /// The endpoints that are searched here are cached upon a call to
+  /// [startMockzilla].
+  EndpointConfig _determineEndpoint(String key) => endpoints.firstWhere(
         (endpoint) => endpoint.key == key,
+        orElse: () => throw EndpointNotFoundError(key, StackTrace.current),
       );
 
   /// Calls the matcher on the specified endpoint.
   @override
   bool endpointMatcher(BridgeMockzillaHttpRequest request, String key) {
-    return _determineEndpoint(key)?.endpointMatcher(request.toDart()) ?? false;
+    return _determineEndpoint(key).endpointMatcher(request.toDart());
   }
 
   /// Returns the default response for the endpoint associated with [key].
   @override
   BridgeMockzillaHttpResponse defaultHandler(
       BridgeMockzillaHttpRequest request, String key) {
-    return _determineEndpoint(key)?.defaultHandler(request.toDart()).toBridge();
+    return _determineEndpoint(key).defaultHandler(request.toDart()).toBridge();
   }
 
   /// Returns the default error response for the endpoint associated with
@@ -58,13 +79,8 @@ class CallbackProvider extends MockzillaFlutterApi {
   @override
   BridgeMockzillaHttpResponse errorHandler(
       BridgeMockzillaHttpRequest request, String key) {
-    return _determineEndpoint(key)?.errorHandler(request.toDart()).toBridge();
+    return _determineEndpoint(key).errorHandler(request.toDart()).toBridge();
   }
-
-  @override
-  Future<BridgeAuthHeader> generateAuthHeader() => _generateAuthHeader().then(
-        (result) => result.toDart(),
-      );
 
   @override
   void log(
@@ -74,5 +90,22 @@ class CallbackProvider extends MockzillaFlutterApi {
     String? exception,
   ) {
     /* TODO: Implement */
+  }
+}
+
+@internal
+extension FlutterCallbackProvider on CallbackProvider {
+  bool flutterEndpointMatcher(MockzillaHttpRequest request, String key) {
+    return endpointMatcher(request.toBridge(), key);
+  }
+
+  MockzillaHttpResponse flutterDefaultHandler(
+      MockzillaHttpRequest request, String key) {
+    return defaultHandler(request.toBridge(), key).toDart();
+  }
+
+  MockzillaHttpResponse flutterErrorHandler(
+      MockzillaHttpRequest request, String key) {
+    return errorHandler(request.toBridge(), key).toDart();
   }
 }

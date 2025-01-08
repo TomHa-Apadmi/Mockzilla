@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:example/engine/feature/packages/models.dart';
 import 'package:mockzilla/mockzilla.dart';
+import 'package:mockzilla_example/engine/feature/packages/models.dart';
 
 final mockzillaConfig = const MockzillaConfig().addEndpoint(
   () => EndpointConfig(
@@ -10,6 +10,7 @@ final mockzillaConfig = const MockzillaConfig().addEndpoint(
         request.uri.endsWith("packages") && request.method == HttpMethod.get,
     defaultHandler: (_) => defaultResponse,
     errorHandler: (_) => errorResponse,
+    shouldFail: false,
   ),
 );
 

@@ -10,8 +10,6 @@ import Flutter
 import mockzilla
 import SwiftMockzilla
 
-extension FlutterError: Error {}
-
 class MockzillaIos: Thread, MockzillaHostApi {
     
     private let handler: MockzillaFlutterApi
@@ -34,7 +32,7 @@ class MockzillaIos: Thread, MockzillaHostApi {
         let nativeConfig = config.toNative(
             endpointMatcher: { key, request in
                 do {
-                    var result: Result<Bool, FlutterError> = Result.failure(FlutterError())
+                    var result: Result<Bool, PigeonError>!
                     let nativeRequest = try BridgeMockzillaHttpRequest.fromNative(request)
                     DispatchQueue.main.async {
                         self.handler.endpointMatcher(
@@ -54,7 +52,7 @@ class MockzillaIos: Thread, MockzillaHostApi {
             },
             defaultHandler: { key, request in
                 do {
-                    var result: Result<BridgeMockzillaHttpResponse, FlutterError> = Result.failure(FlutterError())
+                    var result: Result<BridgeMockzillaHttpResponse, PigeonError>!
                     let nativeRequest = try BridgeMockzillaHttpRequest.fromNative(request)
                     DispatchQueue.main.async {
                         self.handler.defaultHandler(
@@ -74,7 +72,7 @@ class MockzillaIos: Thread, MockzillaHostApi {
             },
             errorHandler: { key, request in
                 do {
-                    var result: Result<BridgeMockzillaHttpResponse, FlutterError> = Result.failure(FlutterError())
+                    var result: Result<BridgeMockzillaHttpResponse, PigeonError>!
                     let nativeRequest = try BridgeMockzillaHttpRequest.fromNative(request)
                     DispatchQueue.main.async {
                         self.handler.errorHandler(
@@ -93,8 +91,14 @@ class MockzillaIos: Thread, MockzillaHostApi {
                 }
             }
         )
-        let params = startMockzilla(config: nativeConfig)
-        return try BridgeMockzillaRuntimeParams.fromNative(params)
+        do {
+            let params = try MockzillaKt.startMockzilla(config: nativeConfig)
+            return try BridgeMockzillaRuntimeParams.fromNative(params)
+        } catch let error as NSError where error.userInfo["KotlinException"] is Mockzilla_commonPortConflictException {
+            throw PigeonError(code: "PortConflictException", message: nil, details: nil)
+        } catch {
+            throw error
+        }
     }
 
     func stopServer() throws {
