@@ -51,7 +51,7 @@ actual class ZeroConfSdkWrapper actual constructor(
         }.forEach { (hostAddress, jmDns) ->
             jmDns.removeServiceListener(serviceType, this@ZeroConfSdkWrapper)
             jmDnsInstances.remove(hostAddress)
-            Logger.d(tag = tag) { "Removing stale listener for $hostAddress" }
+            Logger.d(tag) { "Removing stale listener for $hostAddress" }
         }
 
         // Add new listeners
@@ -63,7 +63,8 @@ actual class ZeroConfSdkWrapper actual constructor(
             jmDns.registerServiceType(serviceType)
             jmDns.addServiceListener(serviceType, this@ZeroConfSdkWrapper)
             jmDnsInstances[inetAddress.hostAddress] = jmDns
-            Logger.i(tag = tag) { "Listening on ${inetAddress.hostAddress}" }
+
+            Logger.i(tag) { "Listening on ${inetAddress.hostAddress}" }
         }
     }
 
