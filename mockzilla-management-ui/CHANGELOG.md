@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.2...mockzilla-management-ui-v1.1.3) (2025-01-20)
+
+
+### Bug Fixes
+
+* Update Kermit and remove named argument for tag to sidestep conflicting overloads ([93ce7f6](https://github.com/Apadmi-Engineering/Mockzilla/commit/93ce7f66ee0f34f40404218a7a8a5ef6cd49d257))
+
 ## [1.1.2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.1...mockzilla-management-ui-v1.1.2) (2025-01-10)
 
 
