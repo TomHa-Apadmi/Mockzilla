@@ -77,7 +77,7 @@ fun DeviceTabsWidgetContent(
             ),
             selected = selectedTab,
             onSelect = {
-                if(it == selectedTab) {
+                if (it == selectedTab) {
                     return@HorizontalTabList
                 }
                 if (it > state.devices.lastIndex) {
