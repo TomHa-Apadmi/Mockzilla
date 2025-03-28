@@ -1,14 +1,16 @@
 package com.apadmi.mockzilla.desktop.ui.widgets.monitorlogs.details
 
-import app.cash.turbine.test
 import com.apadmi.mockzilla.testutils.CoroutineTest
+
+import app.cash.turbine.test
 import org.junit.Test
+
 import kotlin.test.assertEquals
 
 class MonitorLogDetailsViewModelTests : CoroutineTest() {
-
     private fun createSut() = MonitorLogDetailsViewModel(testScope.backgroundScope)
 
+    @Suppress("TOO_LONG_FUNCTION")
     @Test
     fun `onView methods update the state`() = runBlockingTest {
         /* Setup */
