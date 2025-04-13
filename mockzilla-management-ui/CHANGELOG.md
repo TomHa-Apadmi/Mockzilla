@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.3...mockzilla-management-ui-v1.1.4) (2025-04-13)
+
+
+### Bug Fixes
+
+* trigger desktop app build ([6412f8f](https://github.com/Apadmi-Engineering/Mockzilla/commit/6412f8ffd60b14fa34a7b09e7a40ba58be98a9a2))
+
 ## [1.1.3](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.2...mockzilla-management-ui-v1.1.3) (2025-01-20)
 
 
