@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v2.1.2...mockzilla-v2.1.3) (2025-05-07)
+
+
+### Bug Fixes
+
+* bump version ([f27a5d1](https://github.com/Apadmi-Engineering/Mockzilla/commit/f27a5d1abde14b313a2bf62361d3ccd50b724d44))
+
 ## [2.1.2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v2.1.1...mockzilla-v2.1.2) (2025-01-03)
 
 
