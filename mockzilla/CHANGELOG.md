@@ -82,7 +82,6 @@
 
 ## [1.0.1-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/1.0.0-alpha2...v1.0.1-alpha2) (2023-08-06)
 
-
 ### Bug Fixes
 
 * Fix proguard rules to prevent users needing to add rules to app level files ([b00887d](https://github.com/Apadmi-Engineering/Mockzilla/commit/b00887dd5c9f859b2ded23936742ec173348b3a8))
