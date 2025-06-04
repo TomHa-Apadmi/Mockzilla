@@ -20,14 +20,17 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 class MockzillaAndroid(
     private val flutterApi: MockzillaFlutterApi,
+    private val proxyMockzillaLogger: ProxyMockzillaLogger,
     private val context: Context
 ) : MockzillaHostApi {
     val uiThreadHandler = Handler(Looper.getMainLooper())
 
     override fun startServer(config: BridgeMockzillaConfig): BridgeMockzillaRuntimeParams {
-        val nativeConfig = config.toNative({ key -> isMatchedEndpoint(this, key) },
+        val nativeConfig = config.toNative(
+            { key -> isMatchedEndpoint(this, key) },
             { key -> callDefaultHandler(this, key) },
-            { key -> callErrorHandler(this, key) }
+            { key -> callErrorHandler(this, key) },
+            proxyMockzillaLogger,
         )
         val nativeRuntimeParams = startMockzilla(nativeConfig, context)
         return BridgeMockzillaRuntimeParams.fromNative(nativeRuntimeParams)

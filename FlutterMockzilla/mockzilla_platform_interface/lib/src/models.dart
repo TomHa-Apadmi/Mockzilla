@@ -145,6 +145,10 @@ abstract class MockzillaConfig with _$MockzillaConfig {
     /// Whether devices running Mockzilla are discoverable on the local network
     /// through the desktop management app.
     @Default(true) bool isNetworkDiscoveryEnabled,
+
+    /// Custom logger implementations for surfacing Mockzilla logs outside of
+    /// the Flutter console.
+    @Default([]) List<MockzillaLogger> loggers,
   }) = _MockzillaConfig;
 }
 
@@ -170,4 +174,12 @@ class MockzillaPortConflictException implements Exception {
   String toString() =>
       "Attempted to start Mockzilla server on a port that is already occupied "
       "by another process ($port).";
+}
+
+/// Passed to custom Mockzilla logger instances when an exception is thrown in
+/// the platform Mockzilla implementation.
+class MockzillaPlatformException implements Exception {
+  final String message;
+
+  const MockzillaPlatformException(this.message);
 }
