@@ -19,7 +19,7 @@ class DeviceDetectionUseCaseTests : CoroutineTest() {
     fun `onChangedServiceEvent - various cases - are correct`() = runBlockingTest {
         listOf(
             ChangedServiceEventTestCase(
-                caseDescription = "Android Device - Resolving",
+                caseDescription = "Android Device - Resolving - But with metadata",
                 info = ServiceInfoWrapper(
                     connectionName = "connection name",
                     hostAddress = "host",
@@ -35,6 +35,26 @@ class DeviceDetectionUseCaseTests : CoroutineTest() {
                     metaData = MetaData.dummy().copy(runTarget = RunTarget.AndroidDevice),
                     port = 8080,
                     adbConnection = null,
+                    state = DetectedDevice.State.ReadyToConnect
+                )
+            ),
+            ChangedServiceEventTestCase(
+                caseDescription = "Android Device - Resolving",
+                info = ServiceInfoWrapper(
+                    connectionName = "connection name",
+                    hostAddress = "host",
+                    hostAddresses = listOf("a"),
+                    mapOf(),
+                    8080,
+                    ServiceInfoWrapper.State.Found
+                ),
+                expectedResult = DetectedDevice(
+                    connectionName = "connection name",
+                    hostAddress = "host",
+                    hostAddresses = listOf(IpAddress("a")),
+                    metaData = null,
+                    port = 8080,
+                    adbConnection = null,
                     state = DetectedDevice.State.Resolving
                 )
             ),
@@ -44,7 +64,7 @@ class DeviceDetectionUseCaseTests : CoroutineTest() {
                     connectionName = "connection name",
                     hostAddress = "host",
                     hostAddresses = listOf("b"),
-                    MetaData.dummy().copy(runTarget = RunTarget.IosDevice).toMap(),
+                    mapOf(),
                     8_087_854,
                     ServiceInfoWrapper.State.Found
                 ),
@@ -52,7 +72,7 @@ class DeviceDetectionUseCaseTests : CoroutineTest() {
                     connectionName = "connection name",
                     hostAddress = "host",
                     hostAddresses = listOf(IpAddress("b")),
-                    metaData = MetaData.dummy().copy(runTarget = RunTarget.IosDevice),
+                    metaData = null,
                     port = 8_087_854,
                     adbConnection = null,
                     state = DetectedDevice.State.Resolving
