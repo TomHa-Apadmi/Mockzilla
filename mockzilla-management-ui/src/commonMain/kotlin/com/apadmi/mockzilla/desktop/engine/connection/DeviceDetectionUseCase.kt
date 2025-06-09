@@ -52,14 +52,16 @@ class DeviceDetectionUseCaseImpl(
 
     internal suspend fun onChangedServiceEvent(info: ServiceInfoWrapper) = mutex.withLock {
         val metaData = runCatching { info.attributes.parseMetaData() }.getOrNull()
+        val existingDevice = deviceCache[info.connectionName]
         val adbConnection = if (metaData?.runTarget == RunTarget.AndroidEmulator) {
-            findAdbConnection(info.hostAddresses.map { IpAddress(it) })
+            existingDevice?.adbConnection
+                ?: findAdbConnection(info.hostAddresses.map { IpAddress(it) })
         } else {
             null
         }
+
         val state = determineNewDeviceState(info, metaData, adbConnection)
 
-        val existingDevice = deviceCache[info.connectionName]
         val device = when {
             existingDevice != null && state == DetectedDevice.State.Removed -> existingDevice.copy(
                 state = DetectedDevice.State.Removed
@@ -71,6 +73,8 @@ class DeviceDetectionUseCaseImpl(
                 DetectedDevice.State.NotYourSimulator
             ) && state == DetectedDevice.State.Resolving -> existingDevice
 
+            // jmDNS sometimes seems to emit "Found" for removed devices, so ignore these
+            existingDevice?.state == DetectedDevice.State.Removed && info.state == ServiceInfoWrapper.State.Found -> existingDevice
             else -> null
         } ?: DetectedDevice(
             info.connectionName,
@@ -83,16 +87,20 @@ class DeviceDetectionUseCaseImpl(
         )
 
         deviceCache[info.connectionName] = device
-        onChangeEvent.emit(Unit)
+        if (existingDevice != device) {
+            onChangeEvent.emit(Unit)
+        }
     }
 
     private fun determineNewDeviceState(
         info: ServiceInfoWrapper,
         metaData: MetaData?,
         adbConnection: AdbConnection?
-    ) = when (info.state) {
-        ServiceInfoWrapper.State.Found -> DetectedDevice.State.Resolving
-        ServiceInfoWrapper.State.Resolved -> when (metaData?.runTarget) {
+    ) = when {
+        info.state == ServiceInfoWrapper.State.Removed -> DetectedDevice.State.Removed
+        // If we have metadata it doesn't really matter if the underlying framework considers the
+        // device resolved or not, we already have what we need
+        metaData != null || info.state == ServiceInfoWrapper.State.Resolved -> when (metaData?.runTarget) {
             RunTarget.AndroidEmulator -> adbConnection?.let {
                 DetectedDevice.State.ReadyToConnect
             } ?: DetectedDevice.State.NotYourSimulator
@@ -105,8 +113,7 @@ class DeviceDetectionUseCaseImpl(
 
             else -> DetectedDevice.State.ReadyToConnect
         }
-
-        ServiceInfoWrapper.State.Removed -> DetectedDevice.State.Removed
+        else -> DetectedDevice.State.Resolving
     }
 
     private suspend fun findAdbConnection(
