@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.4...mockzilla-management-ui-v1.2.0) (2025-06-09)
+
+
+### Features
+
+* Implement ability to close device tabs ([#367](https://github.com/Apadmi-Engineering/Mockzilla/issues/367)) ([30068db](https://github.com/Apadmi-Engineering/Mockzilla/commit/30068db464484fab89e3ae762290912e3515cdb4))
+* improve detection by expanding the network interfaces used ([47aefd9](https://github.com/Apadmi-Engineering/Mockzilla/commit/47aefd976dd997ea9fc47ba8c91e94902147394a))
+* improve detection by expanding the network interfaces used ([9cf96ed](https://github.com/Apadmi-Engineering/Mockzilla/commit/9cf96ed40af892339e8000c08e7baba7d9728a97))
+
 ## [1.1.4](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.3...mockzilla-management-ui-v1.1.4) (2025-04-13)
 
 
