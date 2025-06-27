@@ -15,9 +15,9 @@ class ProxyMockzillaLogger: MockzillaLogWriter {
     }
     
     func log(logLevel: MockzillaLogLevel, message: String, tag: String, throwable: KotlinThrowable?) {
-        do {
-            try DispatchQueue.main.asyncAndWait {
-                try flutterApi.log(
+        DispatchQueue.main.async {
+            do {
+                try self.flutterApi.log(
                     logLevel: BridgeLogLevel.fromNative(logLevel),
                     message: message as String,
                     tag: tag as String,
@@ -26,9 +26,9 @@ class ProxyMockzillaLogger: MockzillaLogWriter {
                         // Intentionally blank.
                     }
                 )
+            } catch {
+                // Intentionally blank as this is a fire and forget call
             }
-        } catch {
-            // Intentionally blank as this is a fire and forget call.
         }
     }
 }
