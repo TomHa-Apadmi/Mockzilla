@@ -5,7 +5,9 @@ import com.apadmi.mockzilla.lib.internal.di.DependencyInjector
 import com.apadmi.mockzilla.lib.internal.plugin.SimpleAuthPlugin
 import com.apadmi.mockzilla.lib.internal.service.AuthenticationConstants
 import com.apadmi.mockzilla.lib.internal.service.TokensService
+import com.apadmi.mockzilla.lib.internal.utils.AddressAlreadyInUseException
 import com.apadmi.mockzilla.lib.internal.utils.JsonProvider
+import com.apadmi.mockzilla.lib.internal.utils.isSomeMatchInChain
 import com.apadmi.mockzilla.lib.models.MockzillaConfig
 import com.apadmi.mockzilla.lib.models.MockzillaRuntimeParams
 import com.apadmi.mockzilla.lib.models.PortConflictException
@@ -53,9 +55,21 @@ private fun Application.setupServerEnvironment(job: CompletableJob, di: Dependen
     configureEndpoints(job, di)
 }
 
+private fun EmbeddedServer<*, *>.startWithErrorHandling(di: DependencyInjector) = try {
+    start(wait = false)
+} catch (e: Exception) {
+    if (e.isSomeMatchInChain { it is AddressAlreadyInUseException }) {
+        PortConflictException(di.config.port, e).also { exception ->
+            di.logger.e(exception.message, exception)
+            throw exception
+        }
+    } else {
+        throw e
+    }
+}
+
 internal fun startServer(port: Int, di: DependencyInjector) = runBlocking {
     stopServer()
-    assertPortAvailability(port, di)
 
     val job = SupervisorJob().also { job = it }
     val serverEngine = embeddedServer(CIO, configure = {
@@ -72,7 +86,7 @@ internal fun startServer(port: Int, di: DependencyInjector) = runBlocking {
     }).apply {
         application.setupServerEnvironment(job = job, di = di)
         server = this.application.engine
-        start(wait = false)
+        startWithErrorHandling(di)
     }
 
     val actualPort = serverEngine.application.engine.resolvedConnectors()
@@ -95,15 +109,6 @@ internal fun startServer(port: Int, di: DependencyInjector) = runBlocking {
 internal fun stopServer() = runBlocking {
     job?.cancel()
     server?.stop()
-}
-
-internal suspend fun assertPortAvailability(port: Int, di: DependencyInjector) {
-    if (!di.socketIo.isPortAvailable(port)) {
-        PortConflictException(port).also { exception ->
-            di.logger.e(exception.message, exception)
-            throw exception
-        }
-    }
 }
 
 private fun startNetworkDiscoveryBroadcastIfNeeded(
