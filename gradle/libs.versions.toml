@@ -53,6 +53,7 @@ testParamInjector = "1.18" # https://github.com/google/TestParameterInjector
 
 # Conveyor
 conveyor = "1.12" # https://github.com/hydraulic-software/conveyor
+vanniktech-publish = "0.34.0" # https://github.com/vanniktech/gradle-maven-publish-plugin
 
 [libraries]
 
@@ -120,3 +121,4 @@ compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 conveyor = { id = "dev.hydraulic.conveyor", version.ref = "conveyor" }
+vanniktechPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-publish" }

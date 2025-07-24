@@ -1,6 +1,8 @@
 import com.apadmi.mockzilla.AndroidConfig
 import com.apadmi.mockzilla.JavaConfig
+import com.apadmi.mockzilla.configureCommonProperties
 import com.apadmi.mockzilla.injectedVersion
+import com.apadmi.mockzilla.isSigningEnabled
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -8,12 +10,14 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
-    id("publication-convention")
+    alias(libs.plugins.vanniktechPublish)
 }
+
+val artifactName = "mockzilla-common"
 
 kotlin {
     // Managed automatically by release-please PRs
-    version = project.injectedVersion() ?: "2.1.3" // x-release-please-version
+    version = project.injectedVersion() ?: "2.2.3" // x-release-please-version
     androidTarget {
         publishAllLibraryVariants()
     }
@@ -26,7 +30,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "mockzilla-common"
+            baseName = artifactName
             xcf.add(this)
         }
     }
@@ -86,19 +90,23 @@ private val javadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaHtml)
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        pom {
-            name.set("mockzilla-common")
-            description.set(
-                """
-                A utility module containing common utilities and models used by multiple different mockzilla libraries.
-            """.trimIndent()
-            )
-        }
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+
+    if (isSigningEnabled()) {
+        signAllPublications()
     }
 
-    publications.filterIsInstance<MavenPublication>().forEach {
-        it.artifact(javadocJar);
+    coordinates(group.toString(), artifactName, version.toString())
+
+    pom {
+        name.set(artifactName)
+        description.set(
+            """
+            A utility module containing common utilities and models used by multiple different mockzilla libraries.
+        """.trimIndent()
+        )
+
+        configureCommonProperties()
     }
 }

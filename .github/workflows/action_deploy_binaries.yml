@@ -36,10 +36,11 @@ jobs:
           export GPG_TTY=$(tty)
           bundle exec fastlane publish_to_maven is_snapshot:$is_snapshot
         env:
-          GPG_PASSPHRASE:  ${{ secrets.GPG_PASSWORD }}
-          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword:  ${{ secrets.GPG_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.GPG_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
       - name: Deploy package to Github for SPM & Cocoapods
         run: bundle exec fastlane ios publish_swift_package is_snapshot:$is_snapshot
         env:

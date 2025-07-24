@@ -1,18 +1,23 @@
 import com.apadmi.mockzilla.JavaConfig
 import com.apadmi.mockzilla.injectedVersion
+import com.apadmi.mockzilla.configureCommonProperties
+import com.apadmi.mockzilla.isSigningEnabled
+
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    id("publication-convention")
+    alias(libs.plugins.vanniktechPublish)
 }
 
 repositories {
     mavenCentral()
 }
 
+val artifactName = "mockzilla-management"
+
 kotlin {
     // Managed automatically by release-please PRs
-    version = project.injectedVersion() ?: "2.1.3" // x-release-please-version
+    version = project.injectedVersion() ?: "2.2.3" // x-release-please-version
 
     jvm {
         withJava()
@@ -59,19 +64,22 @@ private val javadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaHtml)
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        pom {
-            name.set("mockzilla-management")
-            description.set(
-                """
-                A library that provides a kotlin interface to interact with the Mockzilla server 
-                running on device. This is used by the Mockzilla dashboard ui internally.
-            """.trimIndent()
-            )
-        }
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+
+    if (isSigningEnabled()) {
+        signAllPublications()
     }
-    publications.filterIsInstance<MavenPublication>().forEach {
-        it.artifact(javadocJar);
+
+    coordinates(group.toString(), artifactName, version.toString())
+
+    pom {
+        name.set(artifactName)
+        description.set("""
+            A library that provides a kotlin interface to interact with the Mockzilla server
+            running on device. This is used by the Mockzilla dashboard ui internally.
+        """.trimIndent())
+
+        configureCommonProperties()
     }
 }

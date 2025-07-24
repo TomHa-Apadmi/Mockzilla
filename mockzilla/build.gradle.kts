@@ -1,6 +1,8 @@
 import com.apadmi.mockzilla.AndroidConfig
 import com.apadmi.mockzilla.JavaConfig
 import com.apadmi.mockzilla.injectedVersion
+import com.apadmi.mockzilla.configureCommonProperties
+import com.apadmi.mockzilla.isSigningEnabled
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -10,10 +12,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.buildKonfig)
-    id("maven-publish")
-    id("publication-convention")
+    alias(libs.plugins.vanniktechPublish)
     kotlin("native.cocoapods") apply true
 }
+
+val artifactName = "mockzilla"
 
 kotlin {
     androidTarget {
@@ -21,7 +24,7 @@ kotlin {
     }
 
     // Managed automatically by release-please PRs
-    version = project.injectedVersion() ?: "2.1.3" // x-release-please-version
+    version = project.injectedVersion() ?: "2.2.3" // x-release-please-version
 
     val xcf = XCFramework()
     listOf(
@@ -30,7 +33,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "mockzilla"
+            baseName = artifactName
             xcf.add(this)
         }
     }
@@ -49,7 +52,7 @@ kotlin {
         summary = "A solution for running and configuring a local HTTP server to mimic REST API endpoints used by your application."
         homepage = "https://apadmi-engineering.github.io/Mockzilla/"
         framework {
-            baseName = "mockzilla"
+            baseName = artifactName
         }
         license = "{:type => 'MIT', :file => 'LICENSE'}"
         // This is explicitly `getVersion()` and not `version`! The latter is shadowed in `cocoapods` scope.
@@ -121,7 +124,7 @@ android {
 }
 
 buildkonfig {
-    packageName = "$group.mockzilla"
+    packageName = "$group.$artifactName"
 
     defaultConfigs {
         buildConfigField(STRING, "VERSION_NAME", version.toString())
@@ -132,15 +135,19 @@ private val javadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaHtml)
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        pom {
-            name.set("Mockzilla")
-            description.set("Solution for running and configuring a local HTTP server on mobile.")
-        }
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+
+    if (isSigningEnabled()) {
+        signAllPublications()
     }
 
-    publications.filterIsInstance<MavenPublication>().forEach {
-        it.artifact(javadocJar);
+    coordinates(group.toString(), artifactName, version.toString())
+
+    pom {
+        name.set("Mockzilla")
+        description.set("Solution for running and configuring a local HTTP server on mobile.")
+
+        configureCommonProperties()
     }
 }

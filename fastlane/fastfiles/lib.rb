@@ -91,14 +91,11 @@ lane :publish_to_maven do |options|
     FastlaneCore::UI.message("Publishing to remote")
     gradle(
         tasks: [
-            ":mockzilla-common:publish",
-            ":mockzilla:publish",
-            ":mockzilla-management:publish",
+            ":mockzilla-common:publishToMavenCentral",
+            ":mockzilla:publishToMavenCentral",
+            ":mockzilla-management:publishToMavenCentral",
         ],
-        properties: {
-            "signing.gnupg.keyName" => ENV["GPG_KEY_ID"],
-            "signing.gnupg.passphrase" => ENV["GPG_PASSPHRASE"]
-        }.merge(createSnapshotProp(options[:is_snapshot], get_version_name(options)))
+        properties: createSnapshotProp(options[:is_snapshot], get_version_name(options))
     )
 end
 
