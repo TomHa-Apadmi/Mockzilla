@@ -1,6 +1,7 @@
 import com.apadmi.mockzilla.JavaConfig
 import com.apadmi.mockzilla.injectedVersion
 import com.apadmi.mockzilla.configureCommonProperties
+import com.apadmi.mockzilla.isSigningEnabled
 
 
 plugins {
@@ -65,7 +66,10 @@ private val javadocJar by tasks.registering(Jar::class) {
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+
+    if (isSigningEnabled()) {
+        signAllPublications()
+    }
 
     coordinates(group.toString(), artifactName, version.toString())
 

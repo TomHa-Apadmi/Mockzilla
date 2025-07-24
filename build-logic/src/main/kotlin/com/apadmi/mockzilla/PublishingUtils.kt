@@ -6,6 +6,8 @@ import org.gradle.api.publish.maven.MavenPom
 fun Project.injectedVersion() = if (project.hasProperty("version")) properties["version"].toString()
     .takeUnless { it.isBlank() || it == "unspecified" } else null
 
+fun isSigningEnabled() = System.getenv("GPG_KEY_ID") != null
+
 fun MavenPom.configureCommonProperties() {
     url.set("https://github.com/Apadmi-Engineering/Mockzilla")
     licenses {

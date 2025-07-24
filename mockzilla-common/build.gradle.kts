@@ -2,6 +2,7 @@ import com.apadmi.mockzilla.AndroidConfig
 import com.apadmi.mockzilla.JavaConfig
 import com.apadmi.mockzilla.configureCommonProperties
 import com.apadmi.mockzilla.injectedVersion
+import com.apadmi.mockzilla.isSigningEnabled
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -91,7 +92,10 @@ private val javadocJar by tasks.registering(Jar::class) {
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+
+    if (isSigningEnabled()) {
+        signAllPublications()
+    }
 
     coordinates(group.toString(), artifactName, version.toString())
 
