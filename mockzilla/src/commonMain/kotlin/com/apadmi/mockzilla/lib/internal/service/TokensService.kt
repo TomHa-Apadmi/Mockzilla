@@ -2,11 +2,12 @@ package com.apadmi.mockzilla.lib.internal.service
 
 import com.apadmi.mockzilla.lib.internal.utils.generateUuid
 
+import kotlin.time.Clock
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 internal interface TokensService {
     suspend fun getValidToken(): String
@@ -22,6 +23,7 @@ internal class TokensServiceImpl(private val tokenLifeSpan: Duration) : TokensSe
         mutex.withLock { tokens.add(it) }
     }.value
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun isTokenValid(tokenString: String): Boolean {
         val token = tokens.firstOrNull { it.value == tokenString } ?: return false
         mutex.withLock { tokens.remove(token) }
@@ -29,6 +31,7 @@ internal class TokensServiceImpl(private val tokenLifeSpan: Duration) : TokensSe
         return token.expiry > Clock.System.now()
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun newToken() = Token(
         Clock.System.now().plus(tokenLifeSpan),
         generateUuid()
@@ -37,5 +40,6 @@ internal class TokensServiceImpl(private val tokenLifeSpan: Duration) : TokensSe
      * @property expiry
      * @property value
      */
+    @OptIn(ExperimentalTime::class)
     private data class Token(val expiry: Instant, val value: String)
 }

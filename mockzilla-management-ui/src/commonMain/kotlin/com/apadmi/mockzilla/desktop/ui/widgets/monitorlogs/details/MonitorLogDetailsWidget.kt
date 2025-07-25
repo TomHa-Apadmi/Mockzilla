@@ -21,7 +21,6 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontFamily
@@ -31,8 +30,8 @@ import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
 import com.apadmi.mockzilla.desktop.ui.components.EmptyState
 import com.apadmi.mockzilla.lib.internal.models.LogEvent
-import java.awt.SystemColor.text
-import java.time.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Composable
 fun MonitorLogDetailsWidget(
@@ -79,7 +78,7 @@ fun MonitorLogDetailsContent(
     } ?: MonitorLogDetailsEmptyContent()
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalTime::class)
 @Composable
 fun LogDetailsContent(
     logDetail: LogEvent,
@@ -101,7 +100,7 @@ fun LogDetailsContent(
     }
     SelectionContainer {
         Text(
-            text = Instant.ofEpochMilli(logDetail.timestamp).toString(),
+            text = Instant.fromEpochMilliseconds(logDetail.timestamp).toString(),
             style = MaterialTheme.typography.bodyLarge
         )
     }
