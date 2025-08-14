@@ -36,6 +36,7 @@ import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
 import com.apadmi.mockzilla.desktop.ui.AppRootViewModel.State.*
 import com.apadmi.mockzilla.desktop.ui.theme.theme_warning_background
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private fun Connected.ErrorBannerState.bannerText(strings: Strings): String =
     when (this) {
@@ -78,6 +79,26 @@ fun AnimatedErrorBanner(
     errorBannerState?.let {
         ErrorBanner(errorBannerState, onRefreshAll = onRefreshAll, onDismissError = onDismissError)
     }
+}
+
+@Preview
+@Composable
+fun ConnectionLostPreview() = PreviewSurface {
+    ErrorBanner(
+        state = Connected.ErrorBannerState.ConnectionLost,
+        onRefreshAll = {},
+        onDismissError = {},
+    )
+}
+
+@Preview
+@Composable
+fun UnknownErrorPreview() = PreviewSurface {
+    ErrorBanner(
+        state = Connected.ErrorBannerState.UnknownError,
+        onRefreshAll = {},
+        onDismissError = {},
+    )
 }
 
 @Composable

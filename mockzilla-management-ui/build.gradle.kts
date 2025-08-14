@@ -141,6 +141,8 @@ dependencies {
     macAmd64(compose.desktop.macos_x64)
     macAarch64(compose.desktop.macos_arm64)
     windowsAmd64(compose.desktop.windows_x64)
+
+    /* Compose previews */
     debugImplementation(compose.uiTooling)
 }
 

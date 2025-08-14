@@ -16,12 +16,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.apadmi.mockzilla.desktop.di.utils.getViewModel
+import com.apadmi.mockzilla.desktop.engine.device.Device
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 import com.apadmi.mockzilla.desktop.ui.scaffold.HorizontalTab
 import com.apadmi.mockzilla.desktop.ui.scaffold.HorizontalTabList
 import com.apadmi.mockzilla.desktop.ui.utils.desktopTertiaryPointerClick
 import com.apadmi.mockzilla.desktop.ui.widgets.devicetabs.DeviceTabsViewModel.State
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DeviceTabsWidget(
@@ -105,4 +108,30 @@ fun DeviceTabsWidgetContent(
             },
         )
     }
+}
+
+@Preview
+@Composable
+fun DeviceTabsWidgetContentPreview() = PreviewSurface {
+    DeviceTabsWidgetContent(
+        state = State(
+            devices = listOf(
+                State.DeviceTabEntry(
+                    name = "Android",
+                    isActive = true,
+                    isConnected = true,
+                    underlyingDevice = Device(ip = "127.0.0.1", port = "8080"),
+                ),
+                State.DeviceTabEntry(
+                    name = "iOS",
+                    isActive = false,
+                    isConnected = false,
+                    underlyingDevice = Device(ip = "127.0.0.1", port = "8080"),
+                )
+            )
+        ),
+        onSelect = {},
+        onAddNewDevice = {},
+        onCloseTab = {},
+    )
 }

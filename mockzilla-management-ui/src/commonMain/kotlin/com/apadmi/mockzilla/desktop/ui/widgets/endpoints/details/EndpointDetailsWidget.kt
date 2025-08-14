@@ -57,14 +57,17 @@ import com.apadmi.mockzilla.desktop.engine.device.Device
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
 import com.apadmi.mockzilla.desktop.ui.components.EmptyState
-
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 import com.apadmi.mockzilla.desktop.ui.scaffold.HorizontalTab
 import com.apadmi.mockzilla.desktop.ui.scaffold.HorizontalTabList
 import com.apadmi.mockzilla.desktop.ui.theme.alternatingBackground
+import com.apadmi.mockzilla.lib.internal.models.SerializableEndpointConfig
+import com.apadmi.mockzilla.lib.models.DashboardOptionsConfig
 import com.apadmi.mockzilla.lib.models.DashboardOverridePreset
 import com.apadmi.mockzilla.lib.models.EndpointConfiguration
 
 import io.ktor.http.HttpStatusCode
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.parameter.parametersOf
 
 import kotlinx.coroutines.launch
@@ -213,6 +216,47 @@ fun EndpointDetailsWidgetContent(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun EndpointDetailsWidgetContentPreview() = PreviewSurface {
+    EndpointDetailsWidgetContent(
+        state = EndpointDetailsViewModel.State.Endpoint(
+            config = SerializableEndpointConfig.allNulls(
+                key = EndpointConfiguration.Key("Foo"),
+                name = "Foobar",
+                versionCode = 1,
+            ),
+            defaultBody = null,
+            defaultStatus = null,
+            defaultHeaders = null,
+            errorBody = null,
+            errorStatus = null,
+            errorHeaders = null,
+            fail = null,
+            delayMillis = null,
+            jsonEditingDefault = false,
+            jsonEditingError = false,
+            presets = DashboardOptionsConfig(
+                errorPresets = listOf(),
+                successPresets = listOf(),
+            )
+        ),
+        onDefaultBodyChange = {},
+        onErrorBodyChange = {},
+        onFailChange = {},
+        onJsonDefaultEditingChange = {},
+        onJsonErrorEditingChange = {},
+        onDefaultStatusCodeChange = {},
+        onErrorStatusCodeChange = {},
+        onDelayChange = {},
+        onDefaultHeadersChange = {},
+        onErrorHeadersChange = {},
+        onDefaultPresetSelected = {},
+        onErrorPresetSelected = {},
+        onResetAll = {},
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
