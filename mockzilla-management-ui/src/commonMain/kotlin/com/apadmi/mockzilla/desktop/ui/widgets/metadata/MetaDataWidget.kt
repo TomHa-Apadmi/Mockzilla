@@ -25,6 +25,7 @@ import com.apadmi.mockzilla.desktop.di.utils.getViewModel
 import com.apadmi.mockzilla.desktop.engine.device.Device
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 
 import com.apadmi.mockzilla.desktop.ui.widgets.metadata.MetaDataWidgetViewModel.*
 import com.apadmi.mockzilla.lib.models.MetaData
@@ -33,7 +34,9 @@ import com.apadmi.mockzilla_management_ui.generated.resources.Res
 import com.apadmi.mockzilla_management_ui.generated.resources.mockzilla_logo
 
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.parameter.parametersOf
+import kotlin.String
 
 private fun RunTarget.label(strings: Strings) = when (this) {
     RunTarget.AndroidDevice,
@@ -120,4 +123,19 @@ fun MetaDataRow(
                 .align(Alignment.BottomCenter)
         )
     }
+}
+
+@Preview
+@Composable
+fun MetaDataListViewPreview() = PreviewSurface {
+    MetaDataListView(
+        metaData = MetaData(
+            appName = "App name",
+            appPackage = "app.package",
+            operatingSystemVersion = "OS",
+            deviceModel = "Model",
+            appVersion = "App version",
+            mockzillaVersion = "Mockzilla version"
+        )
+    )
 }

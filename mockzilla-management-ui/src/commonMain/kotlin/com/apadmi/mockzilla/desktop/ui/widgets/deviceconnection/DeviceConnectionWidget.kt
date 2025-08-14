@@ -26,6 +26,7 @@ import com.apadmi.mockzilla.desktop.di.utils.getViewModel
 import com.apadmi.mockzilla.desktop.engine.connection.DetectedDevice
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 import com.apadmi.mockzilla.desktop.ui.components.StandardTextTooltip
 import com.apadmi.mockzilla.desktop.ui.theme.alternatingBackground
 import com.apadmi.mockzilla.desktop.ui.widgets.deviceconnection.DeviceConnectionViewModel.State
@@ -34,6 +35,7 @@ import com.apadmi.mockzilla.desktop.utils.Platform
 import com.apadmi.mockzilla_management_ui.generated.resources.Res
 import com.apadmi.mockzilla_management_ui.generated.resources.mockzilla_logo
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private fun DetectedDevice.State.toolTipText(strings: Strings) = when (this) {
     DetectedDevice.State.NotYourSimulator -> strings.widgets.deviceConnection.tooltips.notYourSimulator
@@ -112,6 +114,32 @@ fun DeviceConnectionContent(
     }
 }
 
+@Preview
+@Composable
+fun DeviceConnectionContentPreview() = PreviewSurface {
+    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+        DeviceConnectionContent(
+            state = State(
+                ipAndPort = "127.0.0.1:60000",
+                connectionState = State.ConnectionState.Connecting,
+                devices = listOf(
+                    DetectedDevice(
+                        connectionName = "iPhone",
+                        metaData = null,
+                        hostAddress = "127.0.0.1",
+                        hostAddresses = listOf(),
+                        port = 60000,
+                        adbConnection = null,
+                        state = DetectedDevice.State.ReadyToConnect,
+                    )
+                ),
+            ),
+            onIpAndPortChanged = {},
+            onTapDevice = {},
+        )
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DevicesList(
@@ -137,7 +165,7 @@ private fun DevicesList(
 
     itemsIndexed(devices, key = { _, device -> device.connectionName }) { index, device ->
         Row(
-            modifier = Modifier.animateItemPlacement().alternatingBackground(index).fillMaxWidth()
+            modifier = Modifier.animateItem().alternatingBackground(index).fillMaxWidth()
                 .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

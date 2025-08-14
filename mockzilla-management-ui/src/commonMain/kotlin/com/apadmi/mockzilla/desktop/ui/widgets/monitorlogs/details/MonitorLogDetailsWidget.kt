@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -29,7 +31,10 @@ import com.apadmi.mockzilla.desktop.di.utils.getViewModel
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
 import com.apadmi.mockzilla.desktop.ui.components.EmptyState
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 import com.apadmi.mockzilla.lib.internal.models.LogEvent
+import io.ktor.http.HttpStatusCode
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -184,6 +189,43 @@ fun MonitorLogDetailsEmptyContent(
         title = strings.widgets.logDetails.emptyTitle,
         description = strings.widgets.logDetails.emptyDescription
     )
+}
+
+@Preview
+@Composable
+fun LogDetailsContentPreview() = PreviewSurface {
+    LogDetailsContent(
+        logDetail = LogEvent(
+            timestamp = 1000,
+            url = "https://www.example.com/url",
+            requestBody = "request body",
+            requestHeaders = mapOf(),
+            responseHeaders = mapOf(),
+            responseBody = "response body",
+            status = HttpStatusCode.OK,
+            delay = 50,
+            method = "GET",
+            isIntendedFailure = false,
+        ),
+        visible = MonitorLogDetailsViewModel.State.ViewDetails(
+            requestHeaders = true,
+            requestBody = true,
+            responseHeaders = true,
+            responseBody = true,
+        ),
+        onViewRequestHeaders = {},
+        onViewRequestBody = {},
+        onViewResponseHeaders = {},
+        onViewResponseBody = {},
+    )
+}
+
+@Preview
+@Composable
+fun MonitorLogDetailsEmptyContentPreview() = PreviewSurface {
+    Box(modifier = Modifier.size(300.dp)) {
+        MonitorLogDetailsEmptyContent()
+    }
 }
 
 @Composable

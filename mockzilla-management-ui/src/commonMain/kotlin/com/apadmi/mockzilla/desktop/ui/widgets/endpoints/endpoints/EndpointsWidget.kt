@@ -30,10 +30,12 @@ import com.apadmi.mockzilla.desktop.di.utils.getViewModel
 import com.apadmi.mockzilla.desktop.engine.device.Device
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
 import com.apadmi.mockzilla.desktop.ui.components.StandardTextTooltip
 import com.apadmi.mockzilla.desktop.ui.theme.alternatingBackground
 import com.apadmi.mockzilla.desktop.ui.widgets.endpoints.endpoints.EndpointsViewModel.*
 import com.apadmi.mockzilla.lib.models.EndpointConfiguration.*
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -78,6 +80,55 @@ fun EndpointsWidgetContent(
             onFilterUpdate
         )
     }
+}
+
+@Preview
+@Composable
+fun EndpointsWidgetContentPreview() = PreviewSurface {
+    EndpointsWidgetContent(
+        state = State.EndpointsList(
+            endpoints = listOf(
+                State.EndpointConfig(
+                    key = Key("1"),
+                    name = "FooBar",
+                    fail = false,
+                    isCheckboxTicked = false,
+                    hasValuesOverridden = false,
+                    display = true,
+                ),
+                State.EndpointConfig(
+                    key = Key("2"),
+                    name = "Foo",
+                    fail = true,
+                    isCheckboxTicked = true,
+                    hasValuesOverridden = false,
+                    display = true,
+                ),
+                State.EndpointConfig(
+                    key = Key("3"),
+                    name = "FooBuzz",
+                    fail = false,
+                    isCheckboxTicked = false,
+                    hasValuesOverridden = true,
+                    display = true,
+                ),
+                State.EndpointConfig(
+                    key = Key("4"),
+                    name = "Foobar",
+                    fail = false,
+                    isCheckboxTicked = false,
+                    hasValuesOverridden = false,
+                    display = true,
+                ),
+            ),
+            filter = "Foo",
+        ),
+        onAllCheckboxChanged = {},
+        onCheckboxChanged = { _, _ -> },
+        onFailChanged = { _, _ -> },
+        onFilterUpdate = {},
+        onEndpointClicked = {},
+    )
 }
 
 @Composable
