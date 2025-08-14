@@ -8,6 +8,8 @@ import com.apadmi.mockzilla.desktop.di.utils.getViewModel
 import com.apadmi.mockzilla.desktop.engine.device.Device
 import com.apadmi.mockzilla.desktop.i18n.LocalStrings
 import com.apadmi.mockzilla.desktop.i18n.Strings
+import com.apadmi.mockzilla.desktop.ui.components.PreviewSurface
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -33,4 +35,13 @@ fun MiscControlsWidgetContent(
     Button(onClick = onClearAllOverrides) {
         Text(strings.widgets.miscControls.clearOverrides)
     }
+}
+
+@Preview
+@Composable
+fun MiscControlsWidgetContentPreview() = PreviewSurface {
+    MiscControlsWidgetContent(
+        onRefreshAll = {},
+        onClearAllOverrides = {},
+    )
 }

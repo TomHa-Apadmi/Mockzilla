@@ -137,7 +137,7 @@ private fun DevicesList(
 
     itemsIndexed(devices, key = { _, device -> device.connectionName }) { index, device ->
         Row(
-            modifier = Modifier.animateItemPlacement().alternatingBackground(index).fillMaxWidth()
+            modifier = Modifier.animateItem().alternatingBackground(index).fillMaxWidth()
                 .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

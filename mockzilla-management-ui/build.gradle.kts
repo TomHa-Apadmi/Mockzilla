@@ -24,6 +24,7 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
+            implementation(compose.components.uiToolingPreview)
 
             /* Localisable Strings */
             implementation(libs.lyricist.library)
@@ -140,6 +141,7 @@ dependencies {
     macAmd64(compose.desktop.macos_x64)
     macAarch64(compose.desktop.macos_arm64)
     windowsAmd64(compose.desktop.windows_x64)
+    debugImplementation(compose.uiTooling)
 }
 
 configurations.all {
