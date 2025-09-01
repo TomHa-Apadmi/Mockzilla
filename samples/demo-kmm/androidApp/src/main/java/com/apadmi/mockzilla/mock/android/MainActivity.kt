@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import com.apadmi.mockzilla.mobile.ui.launchManagementUi
+
 import com.apadmi.mockzilla.mock.CowDto
 import com.apadmi.mockzilla.mock.DataResult
 import com.apadmi.mockzilla.mock.GetCowRequestDto
@@ -31,11 +33,16 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                MainContent(cowResult = response.value) { someValue ->
-                    lifecycleScope.launchWhenCreated {
-                        response.value = repository.getCow(someValue)
-                    }
-                }
+                MainContent(
+                    cowResult = response.value,
+                    makeRequest = { someValue ->
+                        lifecycleScope.launchWhenCreated {
+                            response.value = repository.getCow(someValue)
+                        }
+                    },
+                    launchManagementUi = {
+                        launchManagementUi(this)
+                    })
             }
         }
     }
@@ -45,6 +52,7 @@ class MainActivity : ComponentActivity() {
 fun MainContent(
     cowResult: DataResult<CowDto, String>?,
     makeRequest: (someValue: String) -> Unit,
+    launchManagementUi: () -> Unit
 ) = Column(
     modifier = Modifier
         .fillMaxSize(1f)
@@ -69,6 +77,11 @@ fun MainContent(
         makeRequest(text.value)
     }) {
         Text("Make Network Request")
+    }
+    Button(
+        onClick = launchManagementUi
+    ) {
+        Text("Launch Management UI")
     }
 
     cowResult?.let {

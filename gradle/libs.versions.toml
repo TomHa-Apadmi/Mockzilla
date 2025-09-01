@@ -3,9 +3,9 @@
 # Kotlin
 adam = "0.5.10" # https://github.com/Malinskiy/adam
 jmdns = "3.6.1" # https://github.com/jmdns/jmdns
-kotlin = "2.2.0" # https://github.com/JetBrains/kotlin
+kotlin = "2.2.10" # https://github.com/JetBrains/kotlin
 agp = "8.7.3" # https://developer.android.com/build/releases/gradle-plugin
-ksp = "2.2.0-2.0.2" # https://github.com/google/ksp
+ksp = "2.2.10-2.0.2" # https://github.com/google/ksp
 
 # Logging
 kermit = "2.0.6" # https://github.com/touchlab/Kermit
@@ -23,7 +23,8 @@ lyricist = "1.7.0" # https://github.com/adrielcafe/lyricist
 ktor = "3.2.2" # https://github.com/ktorio/ktor
 
 # Compose
-compose = "1.7.0" # https://github.com/JetBrains/compose-multiplatform
+# using beta to fix https://slack-chats.kotlinlang.org/t/29844860/hello-everyone-in-my-team-we-are-having-a-big-problem-with-t
+compose = "1.9.0-beta03" # https://github.com/JetBrains/compose-multiplatform
 
 # DI
 koin = "4.0.3" # https://github.com/InsertKoinIO/koin
@@ -37,10 +38,11 @@ kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serializatio
 lifecycle = "2.8.7" # https://developer.android.com/jetpack/androidx/releases/lifecycle
 compose-activity = "1.9.3" # https://developer.android.com/jetpack/androidx/releases/activity
 mockk = "1.14.5"
+navigationCompose = "2.9.0-beta05"
 playServicesAdsIdentifier = "18.2.0"
 
 # Semantic Versioning
-semver4j = "3.1.0" # https://github.com/vdurmont/semver4j
+semver = "3.0.0" # https://github.com/z4kn4fein/kotlin-semver
 
 # Code Formatting
 spotless = "7.0.4" # https://github.com/diffplug/spotless
@@ -58,7 +60,6 @@ vanniktech-publish = "0.34.0" # https://github.com/vanniktech/gradle-maven-publi
 [libraries]
 
 # Compose & Material
-adam = { module = "com.malinskiy.adam:adam", version.ref = "adam" }
 androidx-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity"  }
 
 # Android Lifecycle
@@ -74,6 +75,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref="kotlinx-coroutines" }
+semver = { module = "io.github.z4kn4fein:semver", version.ref = "semver" }
 
 # Ktor
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
@@ -88,6 +90,10 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-resources = { module = "io.ktor:ktor-client-resources", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
+# Utils
+adam = { module = "com.malinskiy.adam:adam", version.ref = "adam" }
+play-services-ads-identifier = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "playServicesAdsIdentifier" }
+
 # DI
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -95,9 +101,7 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = 
 
 # Testing
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-play-services-ads-identifier = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "playServicesAdsIdentifier" }
-semver4j = { module = "com.vdurmont:semver4j", version.ref = "semver4j" }
-
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
 testParamInjector = { module = "com.google.testparameterinjector:test-parameter-injector", version.ref = "testParamInjector" }
