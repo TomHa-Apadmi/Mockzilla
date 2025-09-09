@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.apadmi.mockzilla.mobile.ui.launchManagementUi
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,8 @@ class MainActivity : ComponentActivity() {
                     state = state.value,
                     setRequestText = viewModel::setRequestText,
                     makeRequest = viewModel::makeRequest,
-                    setIsReleaseMode = viewModel::setIsReleaseMode
+                    setIsReleaseMode = viewModel::setIsReleaseMode,
+                    launchManagementUi = { launchManagementUi(this) }
                 )
             }
         }
@@ -50,6 +52,7 @@ fun MainContent(
     setRequestText: (request: String) -> Unit,
     makeRequest: (someValue: String) -> Unit,
     setIsReleaseMode: (isRelease: Boolean) -> Unit,
+    launchManagementUi: () -> Unit
 ) = Column(
     modifier = Modifier
         .fillMaxSize(1f)
@@ -79,6 +82,12 @@ fun MainContent(
         onClick = { setIsReleaseMode(!state.isRelease) }
     ) {
         Text("Release Mode is ${if (state.isRelease) "On" else "Off"}")
+    }
+
+    Button(
+        onClick = launchManagementUi
+    ) {
+        Text("Launch Management UI")
     }
     state.cowResult?.let { cowResult ->
         Text("Network Request Body")

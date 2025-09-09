@@ -11,6 +11,7 @@ import com.apadmi.mockzilla.lib.models.MockzillaConfig
 import com.apadmi.mockzilla.lib.models.MockzillaRuntimeParams
 import com.apadmi.mockzilla.lib.service.toKermitLogWriter
 import com.apadmi.mockzilla.lib.service.toKermitSeverity
+import com.apadmi.mockzilla.lib.sharedstate.SharedProcessState
 
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
@@ -58,5 +59,7 @@ internal fun startMockzilla(
     scope: CoroutineScope = GlobalScope
 ): MockzillaRuntimeParams {
     scope.launch { di.localCacheService.clearStaleCaches(config.endpoints) }
-    return startServer(config.port, di)
+    return startServer(config.port, di).also {
+        SharedProcessState.runtimeParams = it
+    }
 }

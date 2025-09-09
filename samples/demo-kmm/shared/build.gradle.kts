@@ -25,6 +25,7 @@ kotlin {
         commonMain.dependencies {
             /* Mockzilla */
             api(project(":mockzilla"))
+            api(project(":mockzilla-management-ui:mockzilla-mobile-ui"))
 
             /* Json parsing */
             implementation(libs.kotlinx.serialization.json)

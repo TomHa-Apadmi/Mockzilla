@@ -218,9 +218,11 @@ data class MockzillaConfig(
  * @property port
  * @property authHeaderProvider
  * @property mockzillaVersion
+ * @property ip
  */
 data class MockzillaRuntimeParams(
     val config: MockzillaConfig,
+    val ip: String,
     val mockBaseUrl: String,
     val apiBaseUrl: String,
     val port: Int,
