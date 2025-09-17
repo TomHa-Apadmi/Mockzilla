@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.2.0...mockzilla-management-ui-v1.2.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* Migrate off compatibility release for kotlinx datetime and use stdlib kotlin.time.Instant instead ([e021d8f](https://github.com/Apadmi-Engineering/Mockzilla/commit/e021d8f42d88d27101cf445306468beb21f8512e))
+
 ## [1.2.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-ui-v1.1.4...mockzilla-management-ui-v1.2.0) (2025-06-09)
 
 
