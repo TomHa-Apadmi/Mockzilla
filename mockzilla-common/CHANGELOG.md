@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.3.1](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-common-v2.2.3...mockzilla-common-v2.3.1) (2025-09-16)
+## [2.3.2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-common-v2.2.3...mockzilla-common-v2.3.2) (2025-09-16)
 
 
 ### Bug Fixes
