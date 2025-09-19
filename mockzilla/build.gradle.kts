@@ -24,7 +24,7 @@ kotlin {
     }
 
     // Managed automatically by release-please PRs
-    version = project.injectedVersion() ?: "2.2.3" // x-release-please-version
+    version = project.injectedVersion() ?: "2.3.2" // x-release-please-version
 
     val xcf = XCFramework()
     listOf(
@@ -139,7 +139,10 @@ mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
 
     if (isSigningEnabled()) {
+        logger.info("Signing key found  - signing")
         signAllPublications()
+    } else {
+        logger.info("No signing key found  - skipping signining")
     }
 
     coordinates(group.toString(), artifactName, version.toString())

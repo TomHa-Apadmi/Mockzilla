@@ -1,6 +1,6 @@
 package com.apadmi.mockzilla
 
 object AndroidConfig {
-    val minSdk = 21
-    val targetSdk = 35
+    const val minSdk = 21
+    const val targetSdk = 36
 }

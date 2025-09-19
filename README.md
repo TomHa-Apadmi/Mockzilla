@@ -69,7 +69,3 @@ Mockzilla is designed as a development and test tool **only**.
 Mockzilla should **never be used in production**. Its traffic is unprotected and by nature of running a server on device, it can introduce security issues. 
 
 **Do not ship it to production**.
-
-
-
-

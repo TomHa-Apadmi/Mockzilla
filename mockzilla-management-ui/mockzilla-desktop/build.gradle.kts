@@ -117,6 +117,8 @@ kotlin {
 }
 
 android {
+    // Managed automatically by release-please PRs
+    version = "1.2.1" // x-release-please-version
     compileSdk = AndroidConfig.targetSdk
     namespace = group.toString()
     defaultConfig {
