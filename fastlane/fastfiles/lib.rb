@@ -75,10 +75,7 @@ lane :publish_to_maven_local do |options|
             ":mockzilla:publishToMavenLocal",
             ":mockzilla-management:publishToMavenLocal",
         ],
-        properties: {
-            "signing.gnupg.keyName" => ENV["GPG_KEY_ID"],
-            "signing.gnupg.passphrase" => ENV["GPG_PASSPHRASE"]
-        }.merge(createSnapshotProp(options[:is_snapshot], get_version_name(options)))
+        properties: createSnapshotProp(options[:is_snapshot], get_version_name(options))
     )
 end
 

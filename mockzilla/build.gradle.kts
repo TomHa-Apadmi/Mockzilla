@@ -139,7 +139,10 @@ mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
 
     if (isSigningEnabled()) {
+        logger.info("Signing key found  - signing")
         signAllPublications()
+    } else {
+        logger.info("No signing key found  - skipping signining")
     }
 
     coordinates(group.toString(), artifactName, version.toString())
