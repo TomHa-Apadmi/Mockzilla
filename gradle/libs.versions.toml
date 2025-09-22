@@ -34,7 +34,7 @@ kotlinx-datetime = "0.7.1-0.6.x-compat" # https://github.com/Kotlin/kotlinx-date
 kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
 
 # AndroidX
-lifecycle = "2.8.7" # https://developer.android.com/jetpack/androidx/releases/lifecycle
+lifecycle = "2.9.4" # https://developer.android.com/jetpack/androidx/releases/lifecycle
 compose-activity = "1.11.0" # https://developer.android.com/jetpack/androidx/releases/activity
 mockk = "1.14.5"
 playServicesAdsIdentifier = "18.2.0"
