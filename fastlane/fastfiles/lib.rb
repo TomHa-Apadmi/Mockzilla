@@ -3,7 +3,7 @@ platform :ios do
     lane :generate_xcframework do |options|
         gradle(
             tasks: [":mockzilla:assembleXCFramework"],
-            properties: createSnapshotProp(options[:is_snapshot], get_version_name(options))
+            properties: createSnapshotProp(options[:is_snapshot], get_core_mockzilla_version_name(options))
         )
 
         # Copy the XCFramework to where the SPM package can find it
@@ -14,7 +14,7 @@ platform :ios do
     lane :generate_podspec do |options|
         gradle(
             tasks: [":mockzilla:podPublishReleaseXCFramework"],
-            properties: createSnapshotProp(options[:is_snapshot], get_version_name(options))
+            properties: createSnapshotProp(options[:is_snapshot], get_core_mockzilla_version_name(options))
         )
 
         # Copy the Podspec to where the publish lane can find it
@@ -46,7 +46,7 @@ platform :ios do
             git add .;
             git add --force mockzilla.xcframework;
             git add --force SwiftMockzilla.podspec;
-            git commit -m "Updating Package #{get_version_name(options)}";
+            git commit -m "Updating Package #{get_core_mockzilla_version_name(options)}";
             git push;
         })
 
@@ -54,7 +54,7 @@ platform :ios do
             sh(%{
                 cd apadmi-mockzilla-ios;
                 git push
-                git tag v#{get_version_name(options)}
+                git tag v#{get_core_mockzilla_version_name(options)}
                 git push --tags
             })
 
@@ -75,7 +75,7 @@ lane :publish_to_maven_local do |options|
             ":mockzilla:publishToMavenLocal",
             ":mockzilla-management:publishToMavenLocal",
         ],
-        properties: createSnapshotProp(options[:is_snapshot], get_version_name(options))
+        properties: createSnapshotProp(options[:is_snapshot], get_core_mockzilla_version_name(options))
     )
 end
 
@@ -103,7 +103,7 @@ def createSnapshotProp(is_snapshot, version)
     }
 end
 
-private_lane :get_version_name do |options|
+lane :get_core_mockzilla_version_name do |options|
     build_gradle_text = IO.read("#{lane_context[:repo_root]}/mockzilla/build.gradle.kts")
     version_pattern = /.*"(.*?)" \/\/ x-release-please-version/
     version = build_gradle_text.match(version_pattern)[1]
