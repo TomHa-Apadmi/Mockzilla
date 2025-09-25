@@ -4,6 +4,10 @@
 
 A Flutter plugin for running and configuring a local, mock HTTP server that allows your mobile app to simulate calls to a REST API.
 
+|             | Android                 | iOS   |
+|-------------|-------------------------|-------|
+| **Support** | SDK 21+ (Target SDK 36) | 13.0+ |
+
 **Full documentation available [here!](https://apadmi-engineering.github.io/Mockzilla/)**
 
 ## Why use Mockzilla?
