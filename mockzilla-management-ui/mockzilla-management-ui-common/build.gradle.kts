@@ -65,9 +65,9 @@ kotlin {
             /* Mockzilla Management */
             // These are overridden in the sample apps to use local dependencies for development
             //noinspection UseTomlInstead
-            implementation("com.apadmi:mockzilla-management:2.4.1-SNAPSHOT")
+            implementation("com.apadmi:mockzilla-management:2.4.1")
             //noinspection UseTomlInstead
-            implementation("com.apadmi:mockzilla-common:2.4.1-SNAPSHOT")
+            implementation("com.apadmi:mockzilla-common:2.4.1")
 
             /* Serialization */
             implementation(libs.kotlinx.serialization.json)

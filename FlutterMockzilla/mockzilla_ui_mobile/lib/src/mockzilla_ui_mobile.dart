@@ -1,4 +1,3 @@
-
 import 'package:mockzilla_ui_mobile/src/messages.g.dart';
 
 class MockzillaUiMobile {

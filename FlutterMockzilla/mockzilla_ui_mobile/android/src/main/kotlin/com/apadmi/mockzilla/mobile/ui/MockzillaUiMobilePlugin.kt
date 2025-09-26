@@ -7,8 +7,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-/** MockzillaMobileUiPlugin */
-class MockzillaMobileUiPlugin : FlutterPlugin, ActivityAware {
+/** MockzillaUiMobilePlugin */
+class MockzillaUiMobilePlugin : FlutterPlugin, ActivityAware {
     private var activity: Activity? = null;
 
     lateinit var mockzillaApi: MockzillaUiMobileAndroid

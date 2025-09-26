@@ -53,6 +53,14 @@ Publish to maven local
 
 Publish to maven remote
 
+### get_core_mockzilla_version_name
+
+```sh
+[bundle exec] fastlane get_core_mockzilla_version_name
+```
+
+
+
 ### lib_mockzilla_management_pull_request
 
 ```sh
@@ -145,6 +153,14 @@ iOS target for the lib
 ```
 
 Build and test SwiftMockzilla
+
+### ios generate_mobile_ui_framework_and_podspec
+
+```sh
+[bundle exec] fastlane ios generate_mobile_ui_framework_and_podspec
+```
+
+Generate Podspec
 
 ### ios publish_mobile_ui_swift_package
 

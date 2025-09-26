@@ -6,7 +6,7 @@ It allows manipulation of the mock data being returned by Mockzilla on your devi
 
 !!! important
     You **must** be using the same Wifi network on your device running Mockzilla and the device running
-    the destkop app.
+    the desktop app.
 
 ### (1): Connect your device
 
@@ -22,4 +22,4 @@ Your device should be automatically discovered by Mockzilla (you may need to res
 
 Use the tools to change the data for specific endpoints.
 
-![alt text](img/desktop_demo.gif "Destkop demo")
+![alt text](img/desktop_demo.gif "Desktop demo")

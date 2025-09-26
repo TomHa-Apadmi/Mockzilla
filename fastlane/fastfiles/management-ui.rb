@@ -1,35 +1,31 @@
 require "apadmi_grout"
 
 platform :ios do
-    desc "Generate XCFramework"
-    private_lane :generate_mobile_ui_xcframework do |options|
-        gradle(
-            tasks: [":mockzilla-management-ui:mockzilla-mobile-ui:assembleXCFramework"],
-            properties: createSnapshotProp(options[:is_snapshot], get_mobile_ui_version_name(options))
-        )
-
-        # Copy the XCFramework to where the SPM package can find it
-        sh("cp -rf #{lane_context[:repo_root]}/mockzilla-management-ui/mockzilla-mobile-ui/build/XCFrameworks/release/mockzilla_mobile_ui.xcframework #{lane_context[:repo_root]}/SwiftMockzillaMobileUi")
-    end
-
     desc "Generate Podspec"
-    private_lane :generate_mobile_ui_podspec do |options|
+    private_lane :generate_mobile_ui_framework_and_podspec do |options|
         gradle(
             tasks: [":mockzilla-management-ui:mockzilla-mobile-ui:podPublishReleaseXCFramework"],
             properties: createSnapshotProp(options[:is_snapshot], get_mobile_ui_version_name(options))
         )
 
         # Copy the Podspec to where the publish lane can find it
+        sh("cp -rf #{lane_context[:repo_root]}/mockzilla-management-ui/mockzilla-mobile-ui/build/cocoapods/publish/release/mockzilla_mobile_ui.xcframework #{lane_context[:repo_root]}/SwiftMockzillaMobileUi")
         sh("cp -rf #{lane_context[:repo_root]}/mockzilla-management-ui/mockzilla-mobile-ui/build/cocoapods/publish/release/SwiftMockzillaMobileUi.podspec #{lane_context[:repo_root]}/SwiftMockzillaMobileUi")
+
+        # Remove the resources line from Podspec since it causes it to fail validation (and it's not used)
+        file_path = "#{lane_context[:repo_root]}/SwiftMockzillaMobileUi/SwiftMockzillaMobileUi.podspec"
+        filtered_lines = File.readlines(file_path).reject do |line|
+          line.include?("spec.resources = ")
+        end
+
+        File.open(file_path, "w") do |file|
+          file.puts(filtered_lines)
+        end
     end
 
     desc "Deploy the package to github & push podspec"
     lane :publish_mobile_ui_swift_package do |options|
-        # Create the XCFramework
-        generate_mobile_ui_xcframework(is_snapshot: options[:is_snapshot])
-
-        # Generate the podspec
-        generate_mobile_ui_podspec(is_snapshot: options[:is_snapshot])
+        generate_mobile_ui_framework_and_podspec(is_snapshot: options[:is_snapshot])
 
         sh("rm -rf apadmi-mockzilla-mobile-ui-ios")
 
