@@ -25,6 +25,7 @@ kotlin {
         commonMain.dependencies {
             /* Mockzilla */
             api(project(":mockzilla"))
+            api(project(":mockzilla-management-ui:mockzilla-mobile-ui"))
 
             /* Json parsing */
             implementation(libs.kotlinx.serialization.json)
@@ -36,6 +37,15 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("com.apadmi:mockzilla-management"))
+            .using(project(":mockzilla-management"))
+        substitute(module("com.apadmi:mockzilla-common"))
+            .using(project(":mockzilla-common"))
     }
 }
 
