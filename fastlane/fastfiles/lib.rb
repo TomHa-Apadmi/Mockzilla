@@ -1,33 +1,19 @@
 platform :ios do
-    desc "Generate XCFramework"
-    lane :generate_xcframework do |options|
-        gradle(
-            tasks: [":mockzilla:assembleXCFramework"],
-            properties: createSnapshotProp(options[:is_snapshot], get_core_mockzilla_version_name(options))
-        )
-
-        # Copy the XCFramework to where the SPM package can find it
-        sh("cp -rf #{lane_context[:repo_root]}/mockzilla/build/XCFrameworks/release/mockzilla.xcframework #{lane_context[:repo_root]}/SwiftMockzilla")
-    end
-
-    desc "Generate Podspec"
-    lane :generate_podspec do |options|
+    desc "Generate Podspec and Framework"
+    lane :generate_framework_and_podspec do |options|
         gradle(
             tasks: [":mockzilla:podPublishReleaseXCFramework"],
             properties: createSnapshotProp(options[:is_snapshot], get_core_mockzilla_version_name(options))
         )
 
         # Copy the Podspec to where the publish lane can find it
+        sh("cp -rf #{lane_context[:repo_root]}/mockzilla/build/cocoapods/publish/release/mockzilla.xcframework #{lane_context[:repo_root]}/SwiftMockzilla")
         sh("cp -rf #{lane_context[:repo_root]}/mockzilla/build/cocoapods/publish/release/SwiftMockzilla.podspec #{lane_context[:repo_root]}/SwiftMockzilla")
     end
 
     desc "Deploy the package to github & push podspec"
     lane :publish_swift_package do |options|
-        # Create the XCFramework
-        generate_xcframework(is_snapshot: options[:is_snapshot])
-
-        # Generate the podspec
-        generate_podspec(is_snapshot: options[:is_snapshot])
+        generate_framework_and_podspec(is_snapshot: options[:is_snapshot])
 
         sh("rm -rf apadmi-mockzilla-ios")
 
