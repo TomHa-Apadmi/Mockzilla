@@ -21,6 +21,6 @@ jobs:
           export GPG_TTY=$(tty)
           bundle exec fastlane download_mockzilla_js_assets
       - uses: dart-lang/setup-dart@v1
-      - run: cd mockzilla_web; flutter pub get
+      - run: cd FlutterMockzilla/mockzilla_web; flutter pub get
       - name: Publish
-        run: cd mockzilla_web; dart pub publish --force
+        run: cd FlutterMockzilla/mockzilla_web; dart pub publish --force
