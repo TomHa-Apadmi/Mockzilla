@@ -23,7 +23,7 @@ dependencies:
   mockzilla_platform_interface: ^2.0.0-dev.1
   mockzilla_android: ^2.0.0-dev.1
   mockzilla_ios: ^2.0.0-dev.1
-  mockzilla_web: ^0.0.2
+  mockzilla_web: ^0.0.2-dev.1
 
 dev_dependencies:
   flutter_test:
