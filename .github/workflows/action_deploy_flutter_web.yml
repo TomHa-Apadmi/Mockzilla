@@ -20,7 +20,13 @@ jobs:
         run: |
           export GPG_TTY=$(tty)
           bundle exec fastlane download_mockzilla_js_assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: 'stable'
       - run: cd FlutterMockzilla/mockzilla_web; flutter pub get
       - name: Publish
-        run: cd FlutterMockzilla/mockzilla_web; dart pub publish --force
+        run: cd FlutterMockzilla/mockzilla_web; flutter pub publish --force
