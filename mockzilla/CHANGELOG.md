@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v3.0.0-alpha1...mockzilla-v3.0.0-alpha2) (2025-11-25)
+
+### Features
+
+* Deprecate error presets - they're now managed in a flat list with the regular presets
+
 ## [3.0.0-alpha1](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v2.4.1...mockzilla-v3.0.0-alpha1) (2025-11-06)
 
 ### ⚠ BREAKING CHANGES

@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-v3.0.0-alpha1...mockzilla-management-v3.0.0-alpha2) (2025-11-25)
+
+### Features
+
+* Remove functions to update individual overrides and replace them with presets
+
 ## [3.0.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-v2.4.1...mockzilla-management-v3.0.0) (2025-11-06)
 
 ### Features
