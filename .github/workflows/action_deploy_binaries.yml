@@ -73,6 +73,7 @@ jobs:
   deploy-js:
     name: Publish JS files to GitHub release
     runs-on: macos-14
+    needs: [finalise]
     if: ${{ github.ref_type != 'branch' }}
     steps:
       - uses: actions/checkout@v4
