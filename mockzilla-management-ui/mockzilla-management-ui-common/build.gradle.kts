@@ -23,7 +23,7 @@ val artifactName = "mockzilla-management-ui-common"
 
 kotlin {
 
-    version = project.injectedVersion() ?: "0.0.3" // x-release-please-version
+    version = project.injectedVersion() ?: "0.0.9" // x-release-please-version
 
     androidTarget()
     jvmToolchain(JavaConfig.toolchain)
