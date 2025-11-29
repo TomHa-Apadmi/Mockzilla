@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.9](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-mobile-ui-v0.0.8...mockzilla-mobile-ui-v0.0.9) (2025-11-29)
+
+### Features
+
+* Overhaul of embedded UI - improvements to overall UX/UI
+
 ## [0.0.8](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-mobile-ui-v0.0.7...mockzilla-mobile-ui-v0.0.8) (2025-11-14)
 
 ### Features

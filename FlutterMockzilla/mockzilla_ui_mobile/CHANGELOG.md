@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.9](https://github.com/Apadmi-Engineering/Mockzilla/compare/flutter_mockzilla_ui_mobile-v0.0.8...flutter_mockzilla_ui_mobile-v0.0.9) (2025-11-29)
+
+### Features
+
+* Bump underlying kotlin library
+
 ## [0.0.8](https://github.com/Apadmi-Engineering/Mockzilla/compare/flutter_mockzilla_ui_mobile-v0.0.7...flutter_mockzilla_ui_mobile-v0.0.8) (2025-11-18)
 
 ### Features
