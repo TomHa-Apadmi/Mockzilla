@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-desktop-v1.2.2...mockzilla-desktop-v2.0.0) (2025-12-06)
+
+### Features
+
+* Update embedded UI with complete re-skin ([#524](https://github.com/Apadmi-Engineering/Mockzilla/issues/524)) ([46bebc8](https://github.com/Apadmi-Engineering/Mockzilla/commit/46bebc80bb5646207266ac0062dfede9b38ccbb9))
+
 ## 1.2.2 (2025-10-13)
 
 ### Features
