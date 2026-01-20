@@ -24,6 +24,15 @@ enum LogLevel {
   assertion;
 }
 
+enum DashboardOverridePresetType {
+  clientError,
+  informational,
+  other,
+  redirect,
+  serverError,
+  success,
+}
+
 /// A representation of a request to the Mockzilla server; this is passed to
 /// an endpoint handler in order to generate an appropriate response.
 @freezed
@@ -39,7 +48,11 @@ abstract class MockzillaHttpRequest with _$MockzillaHttpRequest {
 /// Created and returned by an endpoint handler in response to an incoming
 /// HTTP request.
 @freezed
-abstract class MockzillaHttpResponse with _$MockzillaHttpResponse {
+abstract class MockzillaHttpResponse
+    with _$MockzillaHttpResponse
+    implements CommonPartialMockzillaHttpResponse {
+  const MockzillaHttpResponse._();
+
   const factory MockzillaHttpResponse({
     /// The HTTP status to use for the response, defaults to 200 - OK.
     @Default(HttpStatus.ok) int statusCode,
@@ -49,17 +62,55 @@ abstract class MockzillaHttpResponse with _$MockzillaHttpResponse {
     @Default({"Content-Type": "application/json"}) Map<String, String> headers,
     @Default("") String body,
   }) = _MockzillaHttpResponse;
+
+  @override
+  int? nullableStatusCode() => statusCode;
+
+  @override
+  Map<String, String>? nullableHeaders() => headers;
+
+  @override
+  String? nullableBody() => body;
+}
+
+/// Used to define partial overrides of standard responses in Dashboard overrides
+abstract class CommonPartialMockzillaHttpResponse {
+  int? nullableStatusCode();
+  Map<String, String>? nullableHeaders();
+  String? nullableBody();
+}
+
+@freezed
+abstract class PartialMockzillaHttpResponse
+    with _$PartialMockzillaHttpResponse
+    implements CommonPartialMockzillaHttpResponse {
+  const PartialMockzillaHttpResponse._();
+
+  const factory PartialMockzillaHttpResponse({
+    int? statusCode,
+    Map<String, String>? headers,
+    String? body,
+  }) = _PartialMockzillaHttpResponse;
+
+  @override
+  int? nullableStatusCode() => statusCode;
+
+  @override
+  Map<String, String>? nullableHeaders() => headers;
+
+  @override
+  String? nullableBody() => body;
 }
 
 /// Definition for a preset response that can be selected in the desktop
 /// management app.
 @freezed
 abstract class DashboardOverridePreset with _$DashboardOverridePreset {
-  const factory DashboardOverridePreset({
-    required String name,
-    required String? description,
-    required MockzillaHttpResponse response,
-  }) = _DashboardOverridePreset;
+  const factory DashboardOverridePreset(
+      {required String name,
+      required String? description,
+      required CommonPartialMockzillaHttpResponse response,
+      DashboardOverridePresetType? type}) = _DashboardOverridePreset;
 }
 
 /// A collection of preset responses from an endpoint that can be selected in
@@ -67,8 +118,14 @@ abstract class DashboardOverridePreset with _$DashboardOverridePreset {
 @freezed
 abstract class DashboardOptionsConfig with _$DashboardOptionsConfig {
   const factory DashboardOptionsConfig({
-    @Default([]) List<DashboardOverridePreset> successPresets,
-    @Default([]) List<DashboardOverridePreset> errorPresets,
+    @Deprecated(
+        "Success/Error presets are now just one flat list, so use `presets` property")
+    @Default([])
+    List<DashboardOverridePreset> successPresets,
+    @Deprecated("Error Presets will be removed in a future version")
+    @Default([])
+    List<DashboardOverridePreset> errorPresets,
+    @Default([]) List<DashboardOverridePreset> presets,
   }) = _DashboardOptionsConfig;
 }
 

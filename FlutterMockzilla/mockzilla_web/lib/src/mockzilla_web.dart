@@ -80,8 +80,11 @@ class MockzillaWeb extends MockzillaPlatform {
 
   JsEndpointConfiguration _toJsEndpoint(EndpointConfig endpoint) {
     final dashboardPresets = [
+      // ignore: deprecated_member_use
       ...endpoint.dashboardOptionsConfig.successPresets.map(_toJsPreset),
+      // ignore: deprecated_member_use
       ...endpoint.dashboardOptionsConfig.errorPresets.map(_toJsPreset),
+      ...endpoint.dashboardOptionsConfig.presets.map(_toJsPreset),
     ];
 
     final jsDashboard = buildDashboardOptions(dashboardPresets);
@@ -146,10 +149,33 @@ class MockzillaWeb extends MockzillaPlatform {
 
   JsDashboardOverridePreset _toJsPreset(DashboardOverridePreset preset) {
     return buildPreset(
-      name: preset.name,
-      description: preset.description,
-      response: _toJsResponse(preset.response),
-    );
+        name: preset.name,
+        description: preset.description,
+        response: buildPartialResponse(
+          statusCode: preset.response.nullableStatusCode(),
+          headers: preset.response.nullableHeaders(),
+          body: preset.response.nullableBody(),
+        ),
+        type: _toJsType(preset.type));
+  }
+
+  String? _toJsType(DashboardOverridePresetType? type) {
+    switch (type) {
+      case DashboardOverridePresetType.clientError:
+        return "ClientError";
+      case DashboardOverridePresetType.informational:
+        return "Informational";
+      case DashboardOverridePresetType.other:
+        return "Other";
+      case DashboardOverridePresetType.redirect:
+        return "Redirect";
+      case DashboardOverridePresetType.serverError:
+        return "ServerError";
+      case DashboardOverridePresetType.success:
+        return "Success";
+      case null:
+        return null;
+    }
   }
 
   MockzillaRuntimeParams _fromJsRuntimeParams(

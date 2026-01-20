@@ -29,6 +29,15 @@ enum BridgeLogLevel {
   assertion;
 }
 
+enum BridgeDashboardOverridePresetType {
+  clientError,
+  informational,
+  other,
+  redirect,
+  serverError,
+  success,
+}
+
 class BridgeMockzillaHttpRequest {
   final String uri;
   final Map<String, String> headers;
@@ -55,25 +64,36 @@ class BridgeMockzillaHttpResponse {
   ]);
 }
 
+class BridgePartialMockzillaHttpResponse {
+  final int? statusCode;
+  final Map<String, String>? headers;
+  final String? body;
+
+  const BridgePartialMockzillaHttpResponse([
+    this.statusCode,
+    this.headers,
+    this.body,
+  ]);
+}
+
 class BridgeDashboardOverridePreset {
   final String name;
   final String? description;
-  final BridgeMockzillaHttpResponse response;
+  final BridgePartialMockzillaHttpResponse response;
+  final BridgeDashboardOverridePresetType? type;
 
-  const BridgeDashboardOverridePreset({
-    required this.name,
-    this.description,
-    required this.response,
-  });
+  const BridgeDashboardOverridePreset(
+      {required this.name,
+      this.description,
+      required this.response,
+      required this.type});
 }
 
 class BridgeDashboardOptionsConfig {
-  final List<BridgeDashboardOverridePreset> successPresets;
-  final List<BridgeDashboardOverridePreset> errorPresets;
+  final List<BridgeDashboardOverridePreset> presets;
 
   const BridgeDashboardOptionsConfig({
-    required this.successPresets,
-    required this.errorPresets,
+    required this.presets,
   });
 }
 

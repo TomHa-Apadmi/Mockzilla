@@ -31,6 +31,23 @@ extension LogLevelBridge on LogLevel {
 }
 
 @internal
+extension BridgeDashboardOverridePresetTypeBridge
+    on BridgeDashboardOverridePresetType {
+  DashboardOverridePresetType toDart() =>
+      DashboardOverridePresetType.values.firstWhere(
+        (element) => element.name == name,
+      );
+}
+
+@internal
+extension DashboardOverridePresetTypeBridge on DashboardOverridePresetType {
+  BridgeDashboardOverridePresetType toBridge() =>
+      BridgeDashboardOverridePresetType.values.firstWhere(
+        (element) => element.name == name,
+      );
+}
+
+@internal
 extension BridgeMockzillaHttpRequestBridge on BridgeMockzillaHttpRequest {
   MockzillaHttpRequest toDart() => MockzillaHttpRequest(
         uri: uri,
@@ -69,36 +86,61 @@ extension MockzillaHttpResponseBridge on MockzillaHttpResponse {
 }
 
 @internal
+extension BridgePartialMockzillaHttpResponseBridge
+    on BridgePartialMockzillaHttpResponse {
+  PartialMockzillaHttpResponse toDart() => PartialMockzillaHttpResponse(
+        statusCode: statusCode,
+        headers: headers,
+        body: body,
+      );
+}
+
+@internal
+extension PartialMockzillaHttpResponseBridge
+    on CommonPartialMockzillaHttpResponse {
+  BridgePartialMockzillaHttpResponse toBridge() =>
+      BridgePartialMockzillaHttpResponse(
+        statusCode: nullableStatusCode(),
+        headers: nullableHeaders(),
+        body: nullableBody(),
+      );
+}
+
+@internal
 extension BridgeDashboardOverridePresetBridge on BridgeDashboardOverridePreset {
   DashboardOverridePreset toDart() => DashboardOverridePreset(
-        name: name,
-        description: description,
-        response: response.toDart(),
-      );
+      name: name,
+      description: description,
+      response: response.toDart(),
+      type: type?.toDart());
 }
 
 @internal
 extension DashboardOverridePresetBridge on DashboardOverridePreset {
   BridgeDashboardOverridePreset toBridge() => BridgeDashboardOverridePreset(
-        name: name,
-        description: description,
-        response: response.toBridge(),
-      );
+      name: name,
+      description: description,
+      response: response.toBridge(),
+      type: type?.toBridge());
 }
 
 @internal
 extension BridgeDashboardOverrideConfigBridge on BridgeDashboardOptionsConfig {
   DashboardOptionsConfig toDart() => DashboardOptionsConfig(
-        successPresets: successPresets.map((it) => it.toDart()).toList(),
-        errorPresets: errorPresets.map((it) => it.toDart()).toList(),
+        presets: presets.map((it) => it.toDart()).toList(),
       );
 }
 
 @internal
 extension DashboardOverrideConfigBridge on DashboardOptionsConfig {
   BridgeDashboardOptionsConfig toBridge() => BridgeDashboardOptionsConfig(
-        successPresets: successPresets.map((it) => it.toBridge()).toList(),
-        errorPresets: errorPresets.map((it) => it.toBridge()).toList(),
+        presets: [
+          // ignore: deprecated_member_use
+          ...errorPresets,
+          // ignore: deprecated_member_use
+          ...successPresets,
+          ...presets,
+        ].map((it) => it.toBridge()).toList(),
       );
 }
 

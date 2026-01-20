@@ -14,6 +14,37 @@ enum MockzillaError: Error {
     case argumentTypeError
 }
 
+extension BridgeDashboardOverridePresetType {
+    func toNative() -> Mockzilla_commonDashboardOverridePreset.Type_ {
+        return switch self {
+            case BridgeDashboardOverridePresetType.clientError: Mockzilla_commonDashboardOverridePreset.Type_.clienterror
+            case BridgeDashboardOverridePresetType.informational: Mockzilla_commonDashboardOverridePreset.Type_.informational
+            case BridgeDashboardOverridePresetType.other: Mockzilla_commonDashboardOverridePreset.Type_.other
+            case BridgeDashboardOverridePresetType.redirect: Mockzilla_commonDashboardOverridePreset.Type_.redirect
+            case BridgeDashboardOverridePresetType.serverError: Mockzilla_commonDashboardOverridePreset.Type_.servererror
+            case BridgeDashboardOverridePresetType.success: Mockzilla_commonDashboardOverridePreset.Type_.success
+        }
+    }
+
+    static func fromNative(
+        _ data: Mockzilla_commonDashboardOverridePreset.Type_?
+    ) -> BridgeDashboardOverridePresetType? {
+        if data == nil {
+            return nil
+        }
+        
+        return switch (data!) {
+        case Mockzilla_commonDashboardOverridePreset.Type_.clienterror: BridgeDashboardOverridePresetType.clientError
+        case Mockzilla_commonDashboardOverridePreset.Type_.informational: BridgeDashboardOverridePresetType.informational
+        case Mockzilla_commonDashboardOverridePreset.Type_.other: BridgeDashboardOverridePresetType.other
+        case Mockzilla_commonDashboardOverridePreset.Type_.redirect: BridgeDashboardOverridePresetType.redirect
+        case Mockzilla_commonDashboardOverridePreset.Type_.servererror: BridgeDashboardOverridePresetType.serverError
+        case Mockzilla_commonDashboardOverridePreset.Type_.success: BridgeDashboardOverridePresetType.success
+        default: nil
+        }
+    }
+}
+
 extension BridgeHttpMethod {
     func toNative() -> Ktor_httpHttpMethod {
         return switch self {
@@ -77,6 +108,26 @@ extension BridgeMockzillaHttpRequest {
     }
 }
 
+extension BridgePartialMockzillaHttpResponse {
+    func toNative() -> Mockzilla_commonPartialMockzillaHttpResponse {
+        return Mockzilla_commonPartialMockzillaHttpResponse(
+            statusCode: self.statusCode.flatMap { code in
+                Ktor_httpHttpStatusCode.init(value: Int32(code), description: "")
+            },
+            headers: self.headers,
+            body: self.body
+        )
+    }
+
+    static func fromNative(_ response: Mockzilla_commonPartialMockzillaHttpResponse) -> BridgePartialMockzillaHttpResponse {
+        return BridgePartialMockzillaHttpResponse(
+            statusCode: response.statusCode?.value == nil ? nil : Int64(response.statusCode!.value),
+            headers: response.headers,
+            body: response.body
+        )
+    }
+}
+
 extension BridgeMockzillaHttpResponse {
     func toNative() -> MockzillaHttpResponse {
         return MockzillaHttpResponse(
@@ -100,7 +151,9 @@ extension BridgeDashboardOverridePreset {
         return Mockzilla_commonDashboardOverridePreset(
             name: name,
             description: description,
-            response: response.toNative()
+            type: type?.toNative(),
+            response: response.toNative(),
+            isManagementUiDefinedCustomPreset: false
         )
     }
     
@@ -108,7 +161,8 @@ extension BridgeDashboardOverridePreset {
         return BridgeDashboardOverridePreset(
             name: data.name,
             description: data.description_,
-            response: BridgeMockzillaHttpResponse.fromNative(data.response)
+            response: BridgePartialMockzillaHttpResponse.fromNative(data.response),
+            type: BridgeDashboardOverridePresetType.fromNative(data.type)
         )
     }
 }
@@ -116,10 +170,8 @@ extension BridgeDashboardOverridePreset {
 extension BridgeDashboardOptionsConfig {
     func toNative() -> Mockzilla_commonDashboardOptionsConfig {
         return Mockzilla_commonDashboardOptionsConfig(
-            errorPresets: errorPresets.map {
-                preset in preset.toNative()
-            } as! Array<Mockzilla_commonDashboardOverridePreset>,
-            successPresets: successPresets.map {
+            errorPresets: [],
+            successPresets: presets.map {
                 preset in preset.toNative()
             } as! Array<Mockzilla_commonDashboardOverridePreset>
         )
@@ -127,10 +179,7 @@ extension BridgeDashboardOptionsConfig {
     
     static func fromNative(_ data: Mockzilla_commonDashboardOptionsConfig) -> BridgeDashboardOptionsConfig {
         return BridgeDashboardOptionsConfig(
-            successPresets: data.successPresets.map {
-                it in BridgeDashboardOverridePreset.fromNative(it)
-            },
-            errorPresets: data.errorPresets.map {
+            presets: data.presets.map {
                 it in BridgeDashboardOverridePreset.fromNative(it)
             }
         )

@@ -87,6 +87,15 @@ enum BridgeLogLevel: Int {
   case assertion = 5
 }
 
+enum BridgeDashboardOverridePresetType: Int {
+  case clientError = 0
+  case informational = 1
+  case other = 2
+  case redirect = 3
+  case serverError = 4
+  case success = 5
+}
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct BridgeMockzillaHttpRequest {
   var uri: String
@@ -148,22 +157,53 @@ struct BridgeMockzillaHttpResponse {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct BridgePartialMockzillaHttpResponse {
+  var statusCode: Int64? = nil
+  var headers: [String: String]? = nil
+  var body: String? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> BridgePartialMockzillaHttpResponse? {
+    let statusCode: Int64? = nilOrValue(pigeonVar_list[0])
+    let headers: [String: String]? = nilOrValue(pigeonVar_list[1])
+    let body: String? = nilOrValue(pigeonVar_list[2])
+
+    return BridgePartialMockzillaHttpResponse(
+      statusCode: statusCode,
+      headers: headers,
+      body: body
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      statusCode,
+      headers,
+      body,
+    ]
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct BridgeDashboardOverridePreset {
   var name: String
   var description: String? = nil
-  var response: BridgeMockzillaHttpResponse
+  var response: BridgePartialMockzillaHttpResponse
+  var type: BridgeDashboardOverridePresetType? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> BridgeDashboardOverridePreset? {
     let name = pigeonVar_list[0] as! String
     let description: String? = nilOrValue(pigeonVar_list[1])
-    let response = pigeonVar_list[2] as! BridgeMockzillaHttpResponse
+    let response = pigeonVar_list[2] as! BridgePartialMockzillaHttpResponse
+    let type: BridgeDashboardOverridePresetType? = nilOrValue(pigeonVar_list[3])
 
     return BridgeDashboardOverridePreset(
       name: name,
       description: description,
-      response: response
+      response: response,
+      type: type
     )
   }
   func toList() -> [Any?] {
@@ -171,30 +211,27 @@ struct BridgeDashboardOverridePreset {
       name,
       description,
       response,
+      type,
     ]
   }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct BridgeDashboardOptionsConfig {
-  var successPresets: [BridgeDashboardOverridePreset]
-  var errorPresets: [BridgeDashboardOverridePreset]
+  var presets: [BridgeDashboardOverridePreset]
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> BridgeDashboardOptionsConfig? {
-    let successPresets = pigeonVar_list[0] as! [BridgeDashboardOverridePreset]
-    let errorPresets = pigeonVar_list[1] as! [BridgeDashboardOverridePreset]
+    let presets = pigeonVar_list[0] as! [BridgeDashboardOverridePreset]
 
     return BridgeDashboardOptionsConfig(
-      successPresets: successPresets,
-      errorPresets: errorPresets
+      presets: presets
     )
   }
   func toList() -> [Any?] {
     return [
-      successPresets,
-      errorPresets,
+      presets
     ]
   }
 }
@@ -323,18 +360,26 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
       }
       return nil
     case 131:
-      return BridgeMockzillaHttpRequest.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return BridgeDashboardOverridePresetType(rawValue: enumResultAsInt)
+      }
+      return nil
     case 132:
-      return BridgeMockzillaHttpResponse.fromList(self.readValue() as! [Any?])
+      return BridgeMockzillaHttpRequest.fromList(self.readValue() as! [Any?])
     case 133:
-      return BridgeDashboardOverridePreset.fromList(self.readValue() as! [Any?])
+      return BridgeMockzillaHttpResponse.fromList(self.readValue() as! [Any?])
     case 134:
-      return BridgeDashboardOptionsConfig.fromList(self.readValue() as! [Any?])
+      return BridgePartialMockzillaHttpResponse.fromList(self.readValue() as! [Any?])
     case 135:
-      return BridgeEndpointConfig.fromList(self.readValue() as! [Any?])
+      return BridgeDashboardOverridePreset.fromList(self.readValue() as! [Any?])
     case 136:
-      return BridgeMockzillaConfig.fromList(self.readValue() as! [Any?])
+      return BridgeDashboardOptionsConfig.fromList(self.readValue() as! [Any?])
     case 137:
+      return BridgeEndpointConfig.fromList(self.readValue() as! [Any?])
+    case 138:
+      return BridgeMockzillaConfig.fromList(self.readValue() as! [Any?])
+    case 139:
       return BridgeMockzillaRuntimeParams.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -350,26 +395,32 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? BridgeLogLevel {
       super.writeByte(130)
       super.writeValue(value.rawValue)
-    } else if let value = value as? BridgeMockzillaHttpRequest {
+    } else if let value = value as? BridgeDashboardOverridePresetType {
       super.writeByte(131)
-      super.writeValue(value.toList())
-    } else if let value = value as? BridgeMockzillaHttpResponse {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? BridgeMockzillaHttpRequest {
       super.writeByte(132)
       super.writeValue(value.toList())
-    } else if let value = value as? BridgeDashboardOverridePreset {
+    } else if let value = value as? BridgeMockzillaHttpResponse {
       super.writeByte(133)
       super.writeValue(value.toList())
-    } else if let value = value as? BridgeDashboardOptionsConfig {
+    } else if let value = value as? BridgePartialMockzillaHttpResponse {
       super.writeByte(134)
       super.writeValue(value.toList())
-    } else if let value = value as? BridgeEndpointConfig {
+    } else if let value = value as? BridgeDashboardOverridePreset {
       super.writeByte(135)
       super.writeValue(value.toList())
-    } else if let value = value as? BridgeMockzillaConfig {
+    } else if let value = value as? BridgeDashboardOptionsConfig {
       super.writeByte(136)
       super.writeValue(value.toList())
-    } else if let value = value as? BridgeMockzillaRuntimeParams {
+    } else if let value = value as? BridgeEndpointConfig {
       super.writeByte(137)
+      super.writeValue(value.toList())
+    } else if let value = value as? BridgeMockzillaConfig {
+      super.writeByte(138)
+      super.writeValue(value.toList())
+    } else if let value = value as? BridgeMockzillaRuntimeParams {
+      super.writeByte(139)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
