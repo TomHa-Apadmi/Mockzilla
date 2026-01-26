@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-v3.0.0-alpha2...mockzilla-management-v3.0.0) (2026-01-26)
+
+
+### Features
+
+* Remove functions to update individual overrides and replace them with presets
+
+### Bug Fixes
+
+* Migrate off compatibility release for kotlinx datetime and use stdlib kotlin.time.Instant instead ([e021d8f](https://github.com/Apadmi-Engineering/Mockzilla/commit/e021d8f42d88d27101cf445306468beb21f8512e))
+
 ## [3.0.0-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-management-v3.0.0-alpha1...mockzilla-management-v3.0.0-alpha2) (2025-11-25)
 
 ### Features

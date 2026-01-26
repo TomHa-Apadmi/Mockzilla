@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v3.0.0-alpha2...mockzilla-v3.0.0) (2026-01-26)
+
+
+### Features
+
+* Feature/flutter support new mobile UI ([#532](https://github.com/Apadmi-Engineering/Mockzilla/issues/532)) ([70e0a52](https://github.com/Apadmi-Engineering/Mockzilla/commit/70e0a52276220b97db2d427ec93bc85994c50280))
+
 ## [3.0.0-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-v3.0.0-alpha1...mockzilla-v3.0.0-alpha2) (2025-11-25)
 
 ### Features

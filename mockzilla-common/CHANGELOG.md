@@ -1,5 +1,31 @@
 # Changelog
 
+## [3.0.0](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-common-v3.0.0-alpha2...mockzilla-common-v3.0.0) (2026-01-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support upgraded Flutter web packages ([#518](https://github.com/Apadmi-Engineering/Mockzilla/issues/518))
+* Shorten zeroconf keys ([#385](https://github.com/Apadmi-Engineering/Mockzilla/issues/385))
+* Support mockzilla on web ([#509](https://github.com/Apadmi-Engineering/Mockzilla/issues/509))
+* Remove the obsolete web apis and perform general tidy up of warnings ([#466](https://github.com/Apadmi-Engineering/Mockzilla/issues/466))
+
+### Features
+
+* Expose mockzilla apis to JS ([#513](https://github.com/Apadmi-Engineering/Mockzilla/issues/513)) ([5ae0315](https://github.com/Apadmi-Engineering/Mockzilla/commit/5ae03152447b0703c521e6e95c71161b002e9e1d))
+* Setup flutter wrapper and deployments ([86fa014](https://github.com/Apadmi-Engineering/Mockzilla/commit/86fa0140f5b3de8c716f5c1cdd3e088b992a78ba))
+* shorten zeroconf keys ([#385](https://github.com/Apadmi-Engineering/Mockzilla/issues/385)) ([4574ac2](https://github.com/Apadmi-Engineering/Mockzilla/commit/4574ac20bae9712d0e0951c6d2f5082273ae3a0b))
+* Update embedded UI with complete re-skin ([#524](https://github.com/Apadmi-Engineering/Mockzilla/issues/524)) ([46bebc8](https://github.com/Apadmi-Engineering/Mockzilla/commit/46bebc80bb5646207266ac0062dfede9b38ccbb9))
+* Deprecate error presets - they're now managed in a flat list with the regular presets
+* Default & Error handlers are now suspend functions
+* Removed the `body` property on Mockzilla requests (previously deprecated)
+* Make the accessors for the request body suspend functions
+
+### Bug Fixes
+
+* Make use of port re-binding ([1f5ac15](https://github.com/Apadmi-Engineering/Mockzilla/commit/1f5ac15eb3c071e95857917d3e49cb732e186307))
+* Migrate off compatibility release for kotlinx datetime and use stdlib kotlin.time.Instant instead ([e021d8f](https://github.com/Apadmi-Engineering/Mockzilla/commit/e021d8f42d88d27101cf445306468beb21f8512e))
+
 ## [3.0.0-alpha2](https://github.com/Apadmi-Engineering/Mockzilla/compare/mockzilla-common-v3.0.0-alpha1...mockzilla-common-v3.0.0-alpha2) (2025-11-25)
 
 ### Features
